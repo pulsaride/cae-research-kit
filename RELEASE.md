@@ -1,3 +1,116 @@
+# Release v0.2.0-h6-rejected
+
+**Title:** *H₆ Falsified: Topological Signatures Reclassified as Feedback Artefacts*
+**Date:** 2026-05-09
+**Scientific status:** `H6_GAMMA_FEEDBACK_ONLY` — H₆ as pre-registered (ADR-022 §3) is **not supported**.
+**Operational status:** falsification published with full data, ADR chain, per-seed CSVs, both verdict files.
+**Predecessor:** [v0.1.0-h5-rejected](#release-v010-h5-rejected) (sibling falsification).
+**DOI concept:** [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626) (this release requests a new version DOI).
+
+---
+
+## 1. Abstract (no marketing)
+
+H₆ predicted that an online adaptive agent interacting with the controlled
+constraint field **E₀** would produce a phase-space trajectory with a
+**topological signature** distinguishable from any reasonable Markov
+surrogate of its action sequence. The hypothesis was pre-registered in
+ADR-022 (frozen 2026-05-09, SHA `86b49ac1…`) before any code was run.
+
+Phase **β** appeared to confirm H₆ massively. The frozen paired Wilcoxon
+test (ADR-023.ter, alternative `"greater"`) produced **Cohen d = +2.5068**,
+**p = 1.86 × 10⁻⁹**, **n = 30** seeds. By any conventional reading, this is
+a strong positive result.
+
+We did not publish it.
+
+Phase **γ** (ADR-024, frozen before execution) introduced a control branch:
+**`ObsShuffledAgent`** — a wrapper of the same adaptive policy that
+receives `env.observe()` with a fresh per-tick column permutation, so the
+agent *acts on the observation* but cannot extract any usable spatial
+information from it. Two pre-registered tests, both one-sided Wilcoxon,
+both run once on a disjoint seed pool [1300, 1329]:
+
+| Test | Hypothesis | Cohen d | p-value | Threshold | Outcome |
+|------|-----------|---------|---------|-----------|---------|
+| γ.1 | δ(real, shuffled) > δ(real, Markov) | **−0.5027** | **0.998** | d ≥ 0.5, p < 0.005 (Bonferroni) | **fail to reject H₀** |
+| γ.2 | δ(shuffled, Markov) > 0 | — | **9.31 × 10⁻¹⁰** | p < 0.05 | **reject H₀** |
+
+The result is unambiguous and unfavourable to the structural claim. The
+real agent's trajectory is, on average, **closer** to the obs-shuffled
+agent's trajectory than to the Markov-null. The shuffled agent — which by
+construction cannot use the observation's structure — is itself
+significantly different from the Markov-null. Conclusion: the β signal is
+the trivial signature of *conditioning on the environment at all*, not
+the signature of a non-trivial coupling between the agent's policy and
+the field's structure.
+
+Combined verdict per ADR-024 §3.5 verdict matrix: **`H6_GAMMA_FEEDBACK_ONLY`**.
+
+## 2. What this release ships
+
+| Path | Description | SHA-256 |
+|------|-------------|---------|
+| `research/h6_beta_verdict.json` | H6-β verdict (apparent signal) | `e529194b…7d88d693` |
+| `research/h6_beta_run_results.csv` | per-seed δ values, β | `7689a129…3814782e` |
+| `research/h6_gamma_verdict.json` | H6-γ verdict (control) | `d89d15a2…b3fa8d1f` |
+| `research/h6_gamma_run_results.csv` | per-seed (δ_RS, δ_RM, δ_SM), γ | `88e98e20…927dbcdc` |
+| `research/MANIFEST.v0.2.0.yaml` | full release manifest | — |
+| `docs/adr/ADR-022-h6-pre-registration.md` | H₆ pre-registration | `86b49ac1…69cd068` |
+| `docs/adr/ADR-023-h6-beta-phase-space.md` | H6-β metric | `93a63b49…c5205649` |
+| `docs/adr/ADR-023.bis-pressure-vector-trajectory.md` | β pipeline correction | `df5e7f68…f8bcd757` |
+| `docs/adr/ADR-023.ter-paired-wilcoxon.md` | β test specification | `5fe12025…db9856c9` |
+| `docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md` | γ control pre-registration | `20098aef…05819b75` |
+| `docs/adr/ADR-025-h6-release-decision.md` | release decision | `db3093a7…b512246b` |
+
+**Not shipped:** the H6 development tree (`.forge_private/h6_dev/`) is not
+included in this release. See ADR-025 §3 — code archive decision deferred
+to a possible `v0.2.1-h6-code-archive`. The published verdicts and CSVs
+are sufficient to audit the statistical claim.
+
+## 3. Where the value is
+
+This release does not deliver a new positive scientific finding. Its
+deliverable is **methodological**:
+
+- A worked example of a pre-registered control (ADR-024) frozen *before*
+  being run, that overturned an apparent positive result (Cohen d ≈ 2.5).
+- Direct evidence that **trajectory-coupling probes on E₀ in their
+  current form cannot discriminate "feedback effect" from "structural
+  coupling"** — a confound that is not specific to this kit and that
+  affects any work claiming "emergent structure" in agent-environment
+  loops without a feedback-naïve control branch.
+- A second consecutive published falsification with a Zenodo DOI,
+  consolidating the precedent set by v0.1.0-h5-rejected.
+
+## 4. What this release is NOT
+
+- Not a claim about emergence, structure, signature, intelligence,
+  cognition, agency, or any cousin term.
+- Not a claim that *no* topological signature exists in agent-environment
+  trajectories — only that the present probe cannot detect one above the
+  trivial feedback baseline.
+- Not preliminary. Per ADR-025 §6, the H₆ pre-registration is spent and
+  no further runs of the H6-β/γ pipelines under the present probe are
+  authorised.
+
+## 5. Reproducibility note
+
+The H₅ Docker image (`cae-research-kit:0.1.0`, fingerprint
+`406ce26e…008e7e5f`) is unchanged in this release. The H₆ development
+environment used Python 3.12.3 with `numpy==1.26.4`, `scipy==1.12.0`,
+`ripser==0.6.10`, `persim==0.3.5`, `pytest==8.1.1`. Per-seed CSVs are
+sufficient to reproduce the verdict computation independently of the
+trajectory pipeline.
+
+## 6. Next steps
+
+Per ADR-025 §5: any successor experiment (H₇ / H_δ) requires a new ADR
+defining a probe **orthogonal to feedback**. No further H₆ work under
+the present probe.
+
+---
+
 # Release v0.1.0-h5-rejected
 
 **Date:** 2026-05-09

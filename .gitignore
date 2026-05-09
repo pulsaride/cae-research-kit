@@ -42,3 +42,4 @@ doc_base/
 
 # --- Local agent memory -------------------------------------------------------
 /memories/
+.venv-h6/

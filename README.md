@@ -1,15 +1,20 @@
 # CAE Research Kit
 
-A frozen, deterministic, falsification-driven measurement instrument for the
-**H₅ hypothesis** on adaptive optimization regimes.
+A frozen, deterministic, falsification-driven measurement instrument.
+Two published hypotheses: **H₅** (rejected, v0.1.0) and **H₆** (rejected by
+control, v0.2.0).
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
-[![Status: H5_REJECTED](https://img.shields.io/badge/verdict-H5__REJECTED-critical)](research/h5_verdict.json)
-[![ADT: 50/50](https://img.shields.io/badge/ADT-50%2F50%20PASS-brightgreen)](tests/adt)
+[![Status: H5_REJECTED](https://img.shields.io/badge/H5-REJECTED-critical)](research/h5_verdict.json)
+[![Status: H6_FEEDBACK_ONLY](https://img.shields.io/badge/H6-FEEDBACK__ONLY-critical)](research/h6_gamma_verdict.json)
+[![ADT: 50/50](https://img.shields.io/badge/ADT--H5-50%2F50%20PASS-brightgreen)](tests/adt)
 [![Python: 3.11.9](https://img.shields.io/badge/python-3.11.9-blue)](Dockerfile)
 
 > **The discipline is the product.**
+>
+> Two consecutive published falsifications. The instrument earns trust by
+> refusing to confirm itself.
 
 ---
 
@@ -36,7 +41,9 @@ The kit ships:
 - Not a benchmark, not a leaderboard, not a model release.
 - Not generalisable beyond E₀ without a new ADR.
 
-## Verdict (frozen, v0.1.0)
+## Verdicts
+
+### v0.1.0 — H₅ (frozen)
 
 **`H5_REJECTED`** — Adaptive agent A is **not** distinguishable from scripted
 agent B under the Wasserstein-1 redistribution metric (`n=30`, `α=0.01`,
@@ -48,8 +55,39 @@ agent B under the Wasserstein-1 redistribution metric (`n=30`, `α=0.01`,
 | A vs B | 0.145 | 2.37e-01 | **indistinguishable** |
 | A vs P | 6.293 | 1.86e-09 | distinguishable (P degraded) |
 
-Canonical artefacts: [research/h5_verdict.json](research/h5_verdict.json) ·
+Artefacts: [research/h5_verdict.json](research/h5_verdict.json) ·
 [research/h5_run_results.csv](research/h5_run_results.csv)
+
+### v0.2.0 — H₆ (frozen)
+
+**`H6_GAMMA_FEEDBACK_ONLY`** — A naïve test (β phase) initially produced
+an apparent topological signature (Cohen d = 2.51, p = 1.86 × 10⁻⁹). A
+pre-registered control (γ phase, ADR-024) introducing an **observation-shuffled
+agent** invalidated the structural interpretation: the real agent's trajectory
+is statistically *closer* to the obs-shuffled agent's trajectory than to the
+Markov-null. The β signal is reclassified as a **feedback artefact**, not a
+structural signature.
+
+| Test | Cohen's d | Wilcoxon p | Verdict |
+|---|---:|---:|---|
+| H6-β (paired vs Markov-null) | +2.5068 | 1.86e-09 | apparent signal |
+| H6-γ.1 (real vs shuffled vs Markov) | −0.5027 | 0.998 | **fail to reject H₀** |
+| H6-γ.2 (shuffled-vs-Markov > 0) | — | 9.31e-10 | confound confirmed |
+
+Artefacts:
+[research/h6_beta_verdict.json](research/h6_beta_verdict.json) ·
+[research/h6_beta_run_results.csv](research/h6_beta_run_results.csv) ·
+[research/h6_gamma_verdict.json](research/h6_gamma_verdict.json) ·
+[research/h6_gamma_run_results.csv](research/h6_gamma_run_results.csv)
+
+Decision record: [docs/adr/ADR-025-h6-release-decision.md](docs/adr/ADR-025-h6-release-decision.md)
+
+**Plain reading.** *Any* policy that conditions on `env.observe()` — even on
+permuted, information-free observations — produces a trajectory observably
+distinct from a feedback-naïve Markov-null. This is mechanically guaranteed,
+not evidence of structure. Trajectory-coupling probes on E₀ in their current
+form cannot discriminate "feedback effect" from "structural coupling". Future
+work (H₇ / H_δ) requires a probe orthogonal to feedback.
 
 ## Reproducibility
 
@@ -83,15 +121,32 @@ docs/           Public protocol and ADRs
 ## Documents
 
 - [docs/PROTOCOL-v1.0.md](docs/PROTOCOL-v1.0.md) — public scientific protocol
-- [docs/adr/ADR-021-h5-falsification.md](docs/adr/ADR-021-h5-falsification.md) — falsification record
-- [RELEASE.md](RELEASE.md) — v0.1.0 release notes (image identity, deps, verdict)
-- [research/MANIFEST.v0.1.0.yaml](research/MANIFEST.v0.1.0.yaml) — measurement manifest
+- [docs/adr/ADR-021-h5-falsification.md](docs/adr/ADR-021-h5-falsification.md) — H₅ falsification record
+- [docs/adr/ADR-022-h6-pre-registration.md](docs/adr/ADR-022-h6-pre-registration.md) — H₆ pre-registration
+- [docs/adr/ADR-023-h6-beta-phase-space.md](docs/adr/ADR-023-h6-beta-phase-space.md) — H6-β metric
+- [docs/adr/ADR-023.bis-pressure-vector-trajectory.md](docs/adr/ADR-023.bis-pressure-vector-trajectory.md) — H6-β pipeline correction
+- [docs/adr/ADR-023.ter-paired-wilcoxon.md](docs/adr/ADR-023.ter-paired-wilcoxon.md) — H6-β test specification
+- [docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md](docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md) — H6-γ control pre-registration
+- [docs/adr/ADR-025-h6-release-decision.md](docs/adr/ADR-025-h6-release-decision.md) — H₆ release decision
+- [RELEASE.md](RELEASE.md) — release notes (v0.1.0 + v0.2.0)
+- [research/MANIFEST.v0.1.0.yaml](research/MANIFEST.v0.1.0.yaml) — H₅ manifest
+- [research/MANIFEST.v0.2.0.yaml](research/MANIFEST.v0.2.0.yaml) — H₆ manifest
 
 ## Citation
 
 ```bibtex
+@software{cae_research_kit_v0_2_0,
+  title   = {CAE Research Kit: H6 Falsified — Topological Signatures Reclassified as Feedback Artefacts},
+  author  = {{The CAE Research Kit Authors}},
+  year    = {2026},
+  version = {v0.2.0-h6-rejected},
+  doi     = {10.5281/zenodo.20091626},
+  url     = {https://doi.org/10.5281/zenodo.20091626},
+  note    = {Verdict: H6\_GAMMA\_FEEDBACK\_ONLY. Sibling release of v0.1.0-h5-rejected.}
+}
+
 @software{cae_research_kit_v0_1_0,
-  title   = {CAE Research Kit: H₅ Falsification},
+  title   = {CAE Research Kit: H5 Falsification},
   author  = {{The CAE Research Kit Authors}},
   year    = {2026},
   version = {v0.1.0-h5-rejected},

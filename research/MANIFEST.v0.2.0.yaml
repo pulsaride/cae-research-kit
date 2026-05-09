@@ -1,0 +1,126 @@
+# MANIFEST v0.2.0-h6-rejected
+#
+# Authority chain: ADR-022 → ADR-023 → ADR-023.bis → ADR-023.ter → ADR-024 → ADR-025.
+# All SHAs are SHA-256 in hex.
+
+release:
+  tag: v0.2.0-h6-rejected
+  date: 2026-05-09
+  scientific_status: H6_GAMMA_FEEDBACK_ONLY
+  operational_status: falsification_published_with_full_data
+  predecessor: v0.1.0-h5-rejected
+  doi_concept: 10.5281/zenodo.20091626
+
+reproduction_image:
+  inherits_from: v0.1.0-h5-rejected
+  name: cae-research-kit:0.1.0
+  image_id: sha256:f30bf02ce6e486153980c79e43e65bf5c195b4fd6ebf052f04ff10537e3ea78e
+  base: python:3.11.9-slim-bookworm
+  deterministic_fingerprint: 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
+  python: 3.11.9
+  numpy: 1.26.4
+  scipy: 1.12.0
+
+# H6 dev tree was run on a separate venv pinning the topology stack:
+h6_dev_environment:
+  python: 3.12.3
+  pinned:
+    numpy: 1.26.4
+    scipy: 1.12.0
+    ripser: 0.6.10
+    persim: 0.3.5
+    pytest: 8.1.1
+  note: |
+    The H6 development tree (.forge_private/h6_dev/) is NOT distributed
+    with this release. See ADR-025 §3 — code archive decision deferred.
+    The published verdicts and per-seed CSVs are sufficient to audit the
+    statistical claim; reproducing the trajectory pipeline requires a
+    future v0.2.1-h6-code-archive (TBD).
+
+experiments:
+  h6_beta:
+    pre_registration: docs/adr/ADR-022-h6-pre-registration.md
+    metric_specification: docs/adr/ADR-023-h6-beta-phase-space.md
+    pipeline_correction: docs/adr/ADR-023.bis-pressure-vector-trajectory.md
+    test_specification: docs/adr/ADR-023.ter-paired-wilcoxon.md
+    n_seeds: 30
+    seed_range: [1200, 1229]
+    test: paired_wilcoxon_signed_rank
+    alternative: greater
+    verdict: H6_SIGNATURE_DETECTED
+    cohen_d: 2.5068
+    wilcoxon_pvalue: 1.863e-09
+    artefacts:
+      - path: research/h6_beta_verdict.json
+        sha256: e529194b20f0dfb8a9dc189bd9ddf586f890d6e4c672b99a36a841c67d88d693
+      - path: research/h6_beta_run_results.csv
+        sha256: 7689a12929692af26b37b3d41606ee91f9a88dd4fa3cfb68a6d29dac3814782e
+    interpretation: |
+      The β verdict is statistically valid against its specified Markov-null
+      baseline. It does NOT, taken alone, support the structural claim of
+      ADR-022 §3, because the test's null hypothesis cannot distinguish
+      "non-trivial coupling" from "any policy that consumes env.observe()".
+      The γ control was written and frozen before being run to resolve
+      this confound.
+
+  h6_gamma:
+    pre_registration: docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md
+    n_seeds: 30
+    seed_range: [1300, 1329]
+    branches:
+      - R: real AdaptiveAgent (identical to β)
+      - S: ObsShuffledAgent (per-tick column permutation of observation)
+      - M: Markov-null replay (single null per seed)
+    tests:
+      gamma_1:
+        kind: paired_wilcoxon_signed_rank
+        alternative: greater
+        comparison: delta(R, S) > delta(R, M)
+        alpha_bonferroni: 0.005
+        cohen_d_threshold: 0.5
+        cohen_d_observed: -0.5027
+        wilcoxon_pvalue: 0.998
+        rejects_null: false
+      gamma_2:
+        kind: one_sample_wilcoxon_signed_rank
+        alternative: greater
+        comparison: delta(S, M) > 0
+        alpha: 0.05
+        wilcoxon_pvalue: 9.31e-10
+        rejects_null: true
+    verdict: H6_GAMMA_FEEDBACK_ONLY
+    artefacts:
+      - path: research/h6_gamma_verdict.json
+        sha256: d89d15a2658f6f9a975883b70f3aa693c3c4978534fa9dd9e376a985b3fa8d1f
+      - path: research/h6_gamma_run_results.csv
+        sha256: 88e98e20a89f41773fd1cc650e2434bb15bac4d1f1340dbbc3e1e60e927dbcdc
+
+decision_record:
+  path: docs/adr/ADR-025-h6-release-decision.md
+  sha256: db3093a789a818a26f28598d9774e7d18b6a70c1a0a7faa1e4891783b512246b
+  ruling: |
+    H6 as stated in ADR-022 §3 is NOT supported by the β + γ run pair.
+    The β signal is reclassified as a feedback artefact, not a structural
+    signature. Released honestly under the precedent set by ADR-021.
+
+frozen_adr_sha256:
+  ADR-022: 86b49ac1e4eba24c18c5c393b86d1992bcdb3cc8a6651ea7a914f59ee69cd068
+  ADR-023: 93a63b49492d184889a476a2b608c83434d8d9891cdce6fca1ad91a9c5205649
+  ADR-023.bis: df5e7f68e8b18c068cad7be7356e08b95ca264e37ee8ef2aa14835f3f8bcd757
+  ADR-023.ter: 5fe12025637e97706bc6719487a7aeeaadd13bf652a30324974810a9db9856c9
+  ADR-024: 20098aef28b24ea9c74aa532cae3e42adc95dc944ded6d513b4b1d1a05819b75
+  ADR-025: db3093a789a818a26f28598d9774e7d18b6a70c1a0a7faa1e4891783b512246b
+
+audit_trail:
+  doctrine: |
+    H₅ (v0.1.0) was a falsification of an agent-pressure scaling claim.
+    H₆ (v0.2.0) is a falsification of a phase-space topological-signature
+    claim, where the γ control specifically refutes the apparent β signal.
+    The CAE protocol now has two consecutive published falsifications,
+    each with full data, ADR chain, and a Zenodo DOI. This pattern is the
+    instrument's main externally-validated property.
+
+next_steps:
+  - "No further H₆ work under the present probe (ADR-025 §6)."
+  - "Future work requires a new ADR (ADR-026+) defining a probe orthogonal to feedback."
+  - "Code archive release v0.2.1-h6-code-archive is deferred (ADR-025 §3)."
