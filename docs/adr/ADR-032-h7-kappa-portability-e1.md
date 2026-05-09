@@ -230,7 +230,12 @@ Cette section définit en revanche **trois verrous épistémiques** que le CEO s
 
 Tant que `src/env/e1.py` n'est pas figé par un commit signé portant explicitement « E₁ spec frozen per ADR-032 §3.1-§3.3 », aucune exécution d'un agent M_κ sur une instance E₁ n'est admissible — sur aucun seed, dans aucun pool, pour aucune raison (incluant « simple curiosité » ou « debug »). La calibration §3.4 et les tests ADT §3.5 sont autorisés *parce qu'ils ne font pas tourner M_κ* — ils mesurent des propriétés du champ, pas l'effet κ.
 
-**Vérification** : `git log --all --grep="E₁ spec frozen"` doit retourner exactement un commit, et tout commit ultérieur touchant `src/agents/memory1_agent.py` ou un script de tirage E₁ doit lui être postérieur.
+**Vérification** (forme canonique, amendée par §12 ter 2026-05-09) :
+- `git tag --list freeze-e1-v1` doit retourner exactement la ligne `freeze-e1-v1` (le tag est annoté, signé localement, posé sur le commit nu de freeze).
+- `git log --all --grep="^E₁ spec frozen per ADR-032 §3.1-§3.3$"` (match exact subject line, ancres `^…$`) doit retourner exactement un commit, qui doit être l'objet pointé par le tag `freeze-e1-v1`.
+- Tout commit ultérieur touchant `src/agents/memory1_agent.py`, `src/env/e1.py` (au-delà des sections §3.1-§3.3 — toute modification de §3.1-§3.3 enclenche V2), ou un script de tirage E₁ doit être postérieur au commit pointé par `freeze-e1-v1`.
+
+*Note historique* : la formulation initiale `git log --all --grep="E₁ spec frozen"` (sans ancres) matche aussi les commits qui mentionnent simplement la phrase dans leur prose (ex. `feat(e1): ... freeze EN ATTENTE`). L'amendement §12 ter a remplacé cette commande par sa forme ancrée + tag, qui rend le verrou trivialement vérifiable et sémantiquement non-ambigu.
 
 **Verrou V2 — Pas de modification de §3.1-§3.3 après observation de la dynamique E₁** (C5-bis).
 
@@ -396,6 +401,33 @@ Cette section enregistre les modifications internes apportées à l'ADR. Les ame
 - Honnêteté : trace publique de l'erreur de spec et de sa correction, sans patch silencieux du code E₁ pour faire passer les tests.
 
 **Statut post-amendement** : ACCEPTED INTERNAL préservé (les amendements §3.5 sont des seuils opérationnels de tests, pas une modification de la dynamique). Le commit de freeze V1 « E₁ spec frozen per ADR-032 §3.1-§3.3 » devient émissible dès passage CI 22/22.
+
+### 2026-05-09 (suite, ter) — Amendement §7.1 : forme canonique de vérification du verrou V1
+
+**Contexte** : commit de freeze V1 émis (`e634006`, message exact `E₁ spec frozen per ADR-032 §3.1-§3.3`). Vérification routine de la commande publiée en §7.1 :
+
+```
+$ git log --all --grep="E₁ spec frozen" --oneline
+e634006  E₁ spec frozen per ADR-032 §3.1-§3.3
+d4e5dc8  feat(e1): … (WIP, freeze EN ATTENTE)
+8062919  docs(adr): ADR-032 PROPOSED → ACCEPTED INTERNAL …
+```
+
+Trois commits matchent. Sémantiquement un seul est l'acte de freeze ; les deux autres mentionnent la phrase dans leur prose. Le verrou est respecté en intention mais la commande littérale d'§7.1 ne sépare pas l'acte du verbiage.
+
+**Décision** : amender §7.1 pour remplacer la commande non-ancrée par une forme canonique trivialement vérifiable :
+1. Forme `--grep="^E₁ spec frozen per ADR-032 §3.1-§3.3$"` (match exact subject line via ancres `^…$`) : ne matche que le commit nu, pas les mentions en prose.
+2. Tag git annoté `freeze-e1-v1` sur le commit `e634006` : signature canonique du moment de freeze (idiome git natif, dans la lignée des tags `v0.4.0-h7-kappa-reverses`).
+
+**Aucune modification du contenu du verrou V1**, uniquement de sa commande de vérification. V2, V3 inchangés.
+
+**Doctrine respectée** :
+- V1 : le commit de freeze reste unique et acte du gel. Le tag pointe dessus, ne le déplace pas.
+- V2 : aucune modification de §3.1-§3.3.
+- Aucune mesure M_κ exécutée.
+- Honnêteté : le défaut de la formulation initiale est tracé publiquement plutôt que silencieusement gommé.
+
+**Statut post-amendement** : ACCEPTED INTERNAL préservé.
 
 ---
 
