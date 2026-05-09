@@ -4,6 +4,7 @@ A frozen, deterministic, falsification-driven measurement instrument for the
 **H₅ hypothesis** on adaptive optimization regimes.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
 [![Status: H5_REJECTED](https://img.shields.io/badge/verdict-H5__REJECTED-critical)](research/h5_verdict.json)
 [![ADT: 50/50](https://img.shields.io/badge/ADT-50%2F50%20PASS-brightgreen)](tests/adt)
 [![Python: 3.11.9](https://img.shields.io/badge/python-3.11.9-blue)](Dockerfile)
@@ -90,13 +91,14 @@ docs/           Public protocol and ADRs
 
 ```bibtex
 @software{cae_research_kit_v0_1_0,
-  title  = {CAE Research Kit: H₅ Falsification},
-  author = {{The CAE Research Kit Authors}},
-  year   = {2026},
+  title   = {CAE Research Kit: H₅ Falsification},
+  author  = {{The CAE Research Kit Authors}},
+  year    = {2026},
   version = {v0.1.0-h5-rejected},
-  url    = {https://github.com/pulsaride/cae-research-kit},
-  note   = {Verdict: H5\_REJECTED. Reference fingerprint:
-            406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f}
+  doi     = {10.5281/zenodo.20091626},
+  url     = {https://doi.org/10.5281/zenodo.20091626},
+  note    = {Verdict: H5\_REJECTED. Reference fingerprint:
+             406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f}
 }
 ```
 
