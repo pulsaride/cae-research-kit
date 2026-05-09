@@ -1,3 +1,130 @@
+# Release v0.3.0-h7-σ-inverted
+
+**Title:** *H₇-σ Inverted: Real Feedback Loop Closer to Markov-Null than Obs-Shuffled Control*
+**Date:** 2026-05-09
+**Scientific status:** `H7_SIGMA_INVERTED` — H₇-σ as pre-registered (ADR-026 v2 §2, alternative `"greater"`) is **rejected in the opposite direction**. The mirrored bin formalised in ADR-026 v2.1 §1 (alternative `"less"`, `|d| ≥ 0.5`, `p < 0.005`) is supported with verdicts agreeing across primary and transparency reportings.
+**Operational status:** inverted directional signal published with full data, ADR chain, per-seed CSV, verdict file, and SHA-pinned freeze manifest.
+**Predecessor:** [v0.2.0-h6-rejected](#release-v020-h6-rejected) (sibling falsification).
+**DOI (v0.3.0):** TBD (Zenodo, to be minted post-tag) — concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
+
+---
+
+## 1. Abstract (no marketing)
+
+H₇-σ predicted that an online adaptive agent interacting with E₀ would
+produce, under a stationary action-pressure measure, a divergence from a
+Markov-null surrogate of its action sequence *strictly greater* than the
+divergence produced by an obs-shuffled control of the same policy. The
+hypothesis was pre-registered in ADR-026 v2 (frozen 2026-05-09 morning,
+SHA `7e8e4ea8…`) before the main run, with full constants
+(`B = 64`, `T_warmup = 5_000`, `T_stat = 50_000`, `P ∈ [0,1]` strict),
+statistical chain (paired Wilcoxon, α = 0.005, Cohen d ≥ 0.5,
+ADR-027), and double-reporting clause (Miller-Madow corrected primary
+vs plug-in transparency, disagreement → INCONCLUSIVE override) all
+inscribed in advance. A separate pilot on burned pool [9000-9009] had
+already validated the constants, finiteness, and per-seed wall time
+(pilot summary SHA `caad3901…`) without seeing the main pool.
+
+The frozen main run on the disjoint, pre-reserved pool [1400-1429]
+(n = 30) produced the **opposite** directional signal at strong effect:
+
+| branch | Cohen d | Wilcoxon p (greater) | Wilcoxon p (less) | n_post-drop | verdict |
+|---|---:|---:|---:|---:|---|
+| primary `δ_σ_corr` | **−0.7581** | 0.99999 | **1.04 × 10⁻⁵** | 30 | `H7_SIGMA_INVERTED` |
+| transparency `δ_σ_naive` | −0.7581 | 0.99999 | 1.04 × 10⁻⁵ | 30 | `H7_SIGMA_INVERTED` |
+
+`verdicts_agree = true`. `total_clip_events = 0`. 26 / 30 seeds with `δ_σ < 0`.
+median `δ_σ = −0.148`.
+
+Because ADR-026 v2 §2 listed `H7_SIGMA_INVERTED` as a verdict bin but
+provided no instrument to assert it (the test was one-sided `greater`
+only), ADR-026 v2.1 (frozen *post-main-run, pre-re-adjudication*) added
+the mirrored alternative `"less"` with the *same* α and the *same* `|d|`
+threshold. This is procedurally equivalent to having pre-registered a
+two-sided Wilcoxon with α = 0.005 from the start (the rejection regions
+`d ≥ +0.5` and `d ≤ −0.5` are disjoint, no Bonferroni correction is
+required). The amendment is procedural, not theoretical.
+
+Diagnostic structural signature, replicated pilot → main without re-fit:
+median non-empty bins K_R = 42, K_S = 61.5, K_M = 57 (out of B = 64);
+median `K_R − K_S = −19` (vs pilot −15, **sign preserved, magnitude
+strengthened out-of-sample**).
+
+## 2. What this release ships
+
+| Path | Description | SHA-256 |
+|---|---|---|
+| `research/h7_sigma_verdict.json` | adjudicator output (verdict + p, d, diagnostics) | `62a376b7…45d22fe0` |
+| `research/h7_sigma_run_results.csv` | per-seed (30 rows × 20 cols) | `90ee2b80…22e674a3` |
+| `research/MANIFEST.v0.3.0.yaml` | full release manifest + private freeze chain | — |
+| `docs/adr/ADR-026-h7-sigma.md` | H₇-σ pre-registration (v2 frozen) | `7e8e4ea8…84abc9ae` |
+| `docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md` | amendment formalising INVERTED bin | `2bdf8ae9…fc4e35c8` |
+| `docs/adr/ADR-027-h7-sigma-statistical-chain.md` | paired Wilcoxon spec | `7d755b94…294d76fb` |
+| `docs/adr/ADR-029-h7-sigma-release.md` | release decision | `db730ab0…5e2c69bc` |
+
+**Not shipped (per ADR-029 §4.4):** the H₇ source tree
+(`.forge_private/h7_dev/src/h7/`) and the pilot tree
+(`.forge_private/h7_dev/exploratory/`) are *not* included in this release.
+The H₇ code archive is deferred to v0.4.0 to avoid fragmenting the H₇
+module across releases. SHA-256 of all private files is recorded inline
+in `research/MANIFEST.v0.3.0.yaml` under `private_freeze_chain_sha256`
+for audit. The published per-seed CSV + verdict JSON + adjudicator I/O
+contract are sufficient to reproduce the statistical claim independently.
+
+## 3. Where the value is
+
+This release does deliver a positive empirical finding, but in a direction
+*opposite* to its pre-registered prediction. Its deliverables are:
+
+- The first reproducible non-trivial directional signature in the CAE
+  protocol (replicated pilot → main, pre-registered, frozen).
+- A worked example of an honest inverted-direction publication, with the
+  same statistical rigour, ADR chain, freeze manifest, and Zenodo DOI as
+  a confirmation would have received.
+- A formalised procedural amendment (ADR-026 v2.1) showing how to handle
+  a one-sided pre-registration that needs to assert its mirrored bin
+  *without* relaxing α or introducing post-hoc degrees of freedom.
+- A published structural invariant (`K_R < K_S < K_M` with median
+  `K_R − K_S = −19` on B = 64 bins) that constrains any future model of
+  feedback in CAE.
+
+## 4. What this release is NOT
+
+- Not a confirmation of H₇-σ as stated in ADR-026 v2 §2 (alternative
+  `greater`). That hypothesis is rejected.
+- Not a claim about emergence, structure (in any non-operational sense),
+  intelligence, cognition, agency, or any cousin term. The permitted
+  vocabulary additions in ADR-026 v2.1 §7 — *inverted coupling*,
+  *stabilising feedback* — are operational only, gated on the strict
+  thresholds `d ≤ −0.5 ∧ p_less < 0.005`.
+- Not an automatic trigger for H₇-κ. The κ pool [1500-1599] remains
+  reserved and **frozen**; ADR-028 must first decide whether the inverted
+  verdict is eligible to investigation by κ (out of scope of ADR-029).
+- Not preliminary. Per ADR-029 §4 and ADR-026 v2 §10, the H₇-σ
+  pre-registration is spent and no further runs of the H₇-σ pipeline
+  under the present probe are authorised.
+
+## 5. Reproducibility note
+
+The H₅ Docker image (`cae-research-kit:0.1.0`, fingerprint
+`406ce26e…008e7e5f`) is unchanged. The H₇ development environment used
+Python 3.12.3 with `numpy==1.26.4`, `scipy==1.12.0`, `pytest==8.1.1`
+(plus `ripser==0.6.10` and `persim==0.3.5` inherited from the H₆ venv,
+neither on the H₇-σ critical path). The 30-row per-seed CSV is
+sufficient to reproduce the verdict computation independently of the
+runner pipeline; the adjudicator's I/O contract is documented in
+ADR-027 §3 and the verdict-table thresholds in ADR-026 v2.1 §1.
+
+## 6. Next steps
+
+Per ADR-029 §6, ADR-028 (to be drafted) must decide whether H₇-κ remains
+pertinent on the inverted verdict — either by re-interpreting κ as a
+decomposition of the observed stabilising feedback, or by abandoning κ in
+favour of a re-pre-registered H₈. The κ pool [1500-1599] stays frozen
+until ADR-028 is signed.
+
+---
+
 # Release v0.2.0-h6-rejected
 
 **Title:** *H₆ Falsified: Topological Signatures Reclassified as Feedback Artefacts*

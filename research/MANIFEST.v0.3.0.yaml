@@ -1,0 +1,176 @@
+# MANIFEST v0.3.0-h7-σ-inverted
+#
+# Authority chain: ADR-026 (v2 frozen) → ADR-026 v2.1 (amendment, formalises
+# INVERTED bin via mirrored Wilcoxon) → ADR-027 (statistical chain) → ADR-029
+# (release decision). All SHAs are SHA-256 in hex.
+#
+# Sibling manifests: MANIFEST.v0.1.0.yaml, MANIFEST.v0.2.0.yaml.
+
+release:
+  tag: v0.3.0-h7-σ-inverted
+  date: 2026-05-09
+  scientific_status: H7_SIGMA_INVERTED
+  operational_status: inverted_directional_signal_published_with_full_data
+  predecessor: v0.2.0-h6-rejected
+  doi_concept: 10.5281/zenodo.20091626
+
+reproduction_image:
+  inherits_from: v0.1.0-h5-rejected
+  name: cae-research-kit:0.1.0
+  image_id: sha256:f30bf02ce6e486153980c79e43e65bf5c195b4fd6ebf052f04ff10537e3ea78e
+  base: python:3.11.9-slim-bookworm
+  deterministic_fingerprint: 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
+
+# H7 development environment (private, .forge_private/h7_dev/)
+h7_dev_environment:
+  python: 3.12.3
+  pinned:
+    numpy: 1.26.4
+    scipy: 1.12.0
+    pytest: 8.1.1
+    ripser: 0.6.10     # inherited from H6 venv; not on H7-σ critical path
+    persim: 0.3.5      # inherited from H6 venv; not on H7-σ critical path
+  note: |
+    The H7 source tree (.forge_private/h7_dev/src/h7/) is NOT distributed
+    with this release. See ADR-029 §4.4 — H7 code archive is deferred to
+    v0.4.0 to avoid fragmenting the H7 module across releases. The published
+    per-seed CSV + verdict JSON + adjudicator I/O contract are sufficient
+    to audit the statistical claim independently.
+
+experiments:
+  h7_sigma:
+    pre_registration: docs/adr/ADR-026-h7-sigma.md
+    pre_registration_amendment: docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md
+    statistical_chain: docs/adr/ADR-027-h7-sigma-statistical-chain.md
+    n_seeds: 30
+    seed_range: [1400, 1429]
+    pilot_seed_range: [9000, 9009]
+    pilot_seed_status: BURNED
+    constants:
+      T_warmup: 5000
+      T_stat: 50000
+      B: 64                      # bins per pressure dimension; physical anchor (= D = 64)
+      P_min: 0.0
+      P_max: 1.0
+      scalar: flatten_cell_tick
+      laplace: asymmetric_plus_one_on_Q_when_P_gt_0_and_Q_eq_0
+      entropy_correction: miller_madow
+    test:
+      kind: paired_wilcoxon_signed_rank
+      alternatives:              # both pre-registered (v2.1 amendment §1)
+        - greater                # original H1 direction (structural coupling)
+        - less                   # mirrored bin (inverted coupling)
+      zero_method: wilcox
+      alpha: 0.005
+      cohen_d_threshold_pass: 0.5
+      cohen_d_threshold_feedback_only: 0.2
+      double_reporting:
+        primary_field: delta_sigma_corr
+        transparency_field: delta_sigma_naive
+        disagreement_override: H7_SIGMA_INCONCLUSIVE
+      sample_size_guard:
+        n_post_drop_min: 20
+        violation_override: H7_SIGMA_INCONCLUSIVE
+    primary_result:
+      statistic_field: delta_sigma_corr
+      wilcoxon_statistic_greater: 42.0
+      p_value_greater: 0.9999908776953816
+      p_value_less: 1.0399147868156433e-05
+      cohen_d: -0.7580985095043327
+      n_post_drop: 30
+      verdict_isolated: H7_SIGMA_INVERTED
+    transparency_result:
+      statistic_field: delta_sigma_naive
+      p_value_greater: 0.9999908776953816
+      p_value_less: 1.0399147868156433e-05
+      cohen_d: -0.7581114914989522
+      n_post_drop: 30
+      verdict_isolated: H7_SIGMA_INVERTED
+    verdicts_agree: true
+    verdict: H7_SIGMA_INVERTED
+    diagnostics:
+      median_delta_sigma_corr: -0.1480836246485
+      median_delta_sigma_naive: -0.1480860465235
+      median_K_R: 42.0
+      median_K_S: 61.5
+      median_K_M: 57.0
+      median_K_R_minus_K_S: -19.0
+      pilot_K_R_minus_K_S: -15.0
+      sign_flip_vs_pilot: false
+      total_clip_events: 0
+    artefacts:
+      - path: research/h7_sigma_run_results.csv
+        sha256: 90ee2b80415178fe75cb9e1bd52350e980a6f260c7b7fc0fd65b65f022e674a3
+      - path: research/h7_sigma_verdict.json
+        sha256: 62a376b71b968ad8438a451a9fed8b13bb08f942421dcd87b5e228d045d22fe0
+    interpretation: |
+      H7-σ rejects in the direction OPPOSITE to the pre-registered H1-greater
+      hypothesis. Under the real feedback loop, the agent's stationary
+      action-pressure distribution is statistically CLOSER to the Markov-null
+      baseline (KL-divergence terms) than the obs-shuffled control's is.
+      Equivalent operational reading: the real loop concentrates pressure on a
+      strict subset of state cells (median K_R = 42 vs K_S = 61.5 vs K_M = 57,
+      out of B = 64); destroying the temporal order of observations DISPERSES
+      the pressure profile away from the environment's stationary measure.
+
+      Permitted vocabulary (ADR-026 v2.1 §7): "inverted coupling",
+      "stabilising feedback" in the strict operational sense
+      (d ≤ −0.5 ∧ p_less < 0.005). All cognitive vocabulary remains banned.
+
+      The pilot run [9000-9009] (private) had already inscribed the
+      K_R < K_S signature (median K_R−K_S = −15). The main run on the
+      disjoint, pre-reserved pool [1400-1429] strengthens it
+      (median K_R−K_S = −19) without sign flip, confirming the signature
+      out-of-sample.
+
+decision_record:
+  path: docs/adr/ADR-029-h7-sigma-release.md
+  sha256: db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc
+  ruling: |
+    H7-σ as stated in ADR-026 v2 §2 (alternative=greater) is REJECTED.
+    The mirrored bin formalised in ADR-026 v2.1 §1 (alternative=less,
+    |d| ≥ 0.5, p < 0.005) is supported with verdicts agreeing across
+    primary and transparency reportings. Released honestly under the
+    precedent set by ADR-021 (H5) and ADR-025 (H6).
+
+frozen_adr_sha256:
+  ADR-026:                      7e8e4ea839ad826003014d731e9baeeab04b9f33008079a46b07178884abc9ae
+  ADR-026-v2.1-amendment:       2bdf8ae9eed3684a1cfcf05a884d664fa66aea868ad8528b43db61f1fc4e35c8
+  ADR-027:                      7d755b94e58e9ac52fe2c12867d7ee6d71906c3d3b8e3608a857d282294d76fb
+  ADR-029:                      db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc
+
+# H7-σ private freeze chain (recorded for audit; private files NOT in this release)
+private_freeze_chain_sha256:
+  pilot_kl.py:                  dccb577efd050d9323b38a5553698ad7c4cb5e3cd1bc359df5e633b0d31700b9
+  sigma_runner.py:              1ae4a877d410b3f52694cdae5ad309752246e5b1c8b43f8527e583e1b0425deb
+  sigma_adjudicator.py:         f6c5aeff494dfd323be78e4bbc6160eb3e6ece46d4941805828847f3d0a1b480
+  h7_kl.py:                     5b4520d6e6231006e548b8ac436ded7baf4d887cdea0a77f25ef0bfaaae234c4
+  h6_obs_shuffled.py:           2dddaef172730e88e97cadc03ff12a2c8a8b9cb82d3bb9a86c2eddb725756f9f
+  h6_markov.py:                 5d1b202046141f6cd88382a45714e45b41bffce65d3de041141ae84c000099fe
+  pilot_summary.md:             caad3901af64d8fb7e3b91fa85e2a8390f8accaa735af30a8aee129fd3b60af4
+  h7_sigma_run_results.csv:     90ee2b80415178fe75cb9e1bd52350e980a6f260c7b7fc0fd65b65f022e674a3
+  scipy_version:                "1.12.0"
+  numpy_version:                "1.26.4"
+
+audit_trail:
+  doctrine: |
+    H₅ (v0.1.0) — null regime confirmed (rejection of pressure-scaling claim).
+    H₆ (v0.2.0) — apparent topological signature falsified by obs-shuffled control.
+    H₇-σ (v0.3.0) — directional inversion: real loop is closer to Markov-null
+      stationary distribution than obs-shuffled control is. The first
+      reproducible non-trivial signature in the CAE protocol, but in the
+      direction opposite to the pre-registered prediction. Three consecutive
+      pre-registered, frozen, falsification-disciplined experiments, each
+      published with full data, ADR chain, and a Zenodo DOI.
+    The instrument earns trust by refusing to confirm itself, AND by
+    publishing inverted directional signals with the same rigour as
+    confirmations.
+  pool_status:
+    "[1000-1029]":  burned (H5)
+    "[1200-1229]":  burned (H6 β)
+    "[1300-1329]":  burned (H6 γ)
+    "[1400-1429]":  burned (H7-σ main, this release)
+    "[9000-9009]":  burned (H7-σ pilot, private)
+    "[9100-9109]":  available (never drawn; reserved for remediation only)
+    "[1500-1599]":  reserved for H7-κ; FROZEN until ADR-028 cadres eligibility
+                    of inverted verdict for κ investigation (out of scope of ADR-029)

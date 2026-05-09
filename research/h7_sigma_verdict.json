@@ -1,0 +1,47 @@
+{
+  "test": "wilcoxon",
+  "alternative": "greater",
+  "zero_method": "wilcox",
+  "n": 30,
+  "alpha": 0.005,
+  "d_threshold_pass": 0.5,
+  "d_threshold_feedback_only": 0.2,
+  "primary": {
+    "statistic_field": "delta_sigma_corr",
+    "wilcoxon_statistic_greater": 42.0,
+    "p_value_greater": 0.9999908776953816,
+    "p_value_less": 1.0399147868156433e-05,
+    "cohen_d": -0.7580985095043327,
+    "n_post_drop": 30,
+    "verdict_isolated": "H7_SIGMA_INVERTED"
+  },
+  "transparency": {
+    "statistic_field": "delta_sigma_naive",
+    "wilcoxon_statistic_greater": 42.0,
+    "p_value_greater": 0.9999908776953816,
+    "p_value_less": 1.0399147868156433e-05,
+    "cohen_d": -0.7581114914989522,
+    "n_post_drop": 30,
+    "verdict_isolated": "H7_SIGMA_INVERTED",
+    "notes": []
+  },
+  "verdicts_agree": true,
+  "verdict": "H7_SIGMA_INVERTED",
+  "diagnostics": {
+    "median_delta_sigma_corr": -0.1480836246485,
+    "median_delta_sigma_naive": -0.1480860465235,
+    "median_K_R_minus_K_S": -19.0,
+    "median_K_R": 42.0,
+    "median_K_S": 61.5,
+    "median_K_M": 57.0,
+    "K_R_minus_K_S_sign_negative_on_main": true,
+    "K_R_minus_K_S_pilot_sign_was_negative": true,
+    "sign_flip_vs_pilot": false,
+    "total_clip_events": 0
+  },
+  "decision_record_ref": "ADR-029-h7-sigma-release.md (TBD)",
+  "code_sha256": {
+    "scipy_version": "1.12.0",
+    "numpy_version": "1.26.4"
+  }
+}
