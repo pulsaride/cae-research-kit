@@ -1,0 +1,44 @@
+# --- Python runtime artefacts -------------------------------------------------
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+/env/
+.env
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# --- IDE / Editor / OS --------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Logs & temp files --------------------------------------------------------
+*.log
+*.tmp
+*.bak
+/tmp/
+/logs/
+
+# --- Personal notes & non-public artefacts ------------------------------------
+doc_base/
+.cae-rules
+
+# --- Private forge: agent prompts, ADT generators, internal scripts -----------
+.forge_private/
+
+# --- Local agent memory -------------------------------------------------------
+/memories/

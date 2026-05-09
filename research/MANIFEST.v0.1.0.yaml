@@ -1,0 +1,46 @@
+# Integrity manifest — v0.1.0-h5-rejected
+# Any reproduction that deviates from these fingerprints is invalid.
+
+image:
+  name: cae-research-kit
+  tag: 0.1.0
+  id: sha256:f30bf02ce6e486153980c79e43e65bf5c195b4fd6ebf052f04ff10537e3ea78e
+  base: python:3.11.9-slim-bookworm
+
+determinism:
+  seed: 42
+  pythonhashseed: 42
+  blas_threads: 1
+  fingerprint_sha256: 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
+
+dependencies:
+  python: "3.11.9"
+  numpy: "1.26.4"
+  scipy: "1.12.0"
+  POT: "0.9.3"
+  pandas: "2.2.1"
+  matplotlib: "3.8.3"
+  pytest: "8.1.1"
+
+adt:
+  total: 50
+  passed: 50
+
+verdict:
+  hypothesis: H5
+  status: H5_REJECTED
+  n_seeds: 30
+  cohen_d_AR: 0.595
+  cohen_d_AB: 0.145
+  cohen_d_AP: 6.293
+  wilcoxon_p_AR: 5.548e-04
+  wilcoxon_p_AB: 2.367e-01
+  wilcoxon_p_AP: 1.863e-09
+  threshold_sigma: 3.0
+  alpha: 0.01
+
+artifacts:
+  - research/h5_verdict.json
+  - research/h5_run_results.csv
+  - RELEASE.md
+  - docs/adr/ADR-021-h5-falsification.md
