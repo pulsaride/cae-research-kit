@@ -5,7 +5,7 @@
 **Scientific status:** `H6_GAMMA_FEEDBACK_ONLY` — H₆ as pre-registered (ADR-022 §3) is **not supported**.
 **Operational status:** falsification published with full data, ADR chain, per-seed CSVs, both verdict files.
 **Predecessor:** [v0.1.0-h5-rejected](#release-v010-h5-rejected) (sibling falsification).
-**DOI concept:** [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626) (this release requests a new version DOI).
+**DOI (v0.2.0):** [10.5281/zenodo.20094993](https://doi.org/10.5281/zenodo.20094993) — concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
 
 ---
 

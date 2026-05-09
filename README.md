@@ -5,7 +5,8 @@ Two published hypotheses: **H₅** (rejected, v0.1.0) and **H₆** (rejected by
 control, v0.2.0).
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
+[![DOI concept](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
+[![DOI v0.2.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20094993.svg)](https://doi.org/10.5281/zenodo.20094993)
 [![Status: H5_REJECTED](https://img.shields.io/badge/H5-REJECTED-critical)](research/h5_verdict.json)
 [![Status: H6_FEEDBACK_ONLY](https://img.shields.io/badge/H6-FEEDBACK__ONLY-critical)](research/h6_gamma_verdict.json)
 [![ADT: 50/50](https://img.shields.io/badge/ADT--H5-50%2F50%20PASS-brightgreen)](tests/adt)
@@ -140,9 +141,10 @@ docs/           Public protocol and ADRs
   author  = {{The CAE Research Kit Authors}},
   year    = {2026},
   version = {v0.2.0-h6-rejected},
-  doi     = {10.5281/zenodo.20091626},
-  url     = {https://doi.org/10.5281/zenodo.20091626},
-  note    = {Verdict: H6\_GAMMA\_FEEDBACK\_ONLY. Sibling release of v0.1.0-h5-rejected.}
+  doi     = {10.5281/zenodo.20094993},
+  url     = {https://doi.org/10.5281/zenodo.20094993},
+  note    = {Verdict: H6\_GAMMA\_FEEDBACK\_ONLY. Sibling release of v0.1.0-h5-rejected.
+             Concept DOI: 10.5281/zenodo.20091626.}
 }
 
 @software{cae_research_kit_v0_1_0,
