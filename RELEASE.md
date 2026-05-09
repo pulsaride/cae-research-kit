@@ -5,7 +5,7 @@
 **Scientific status:** `H7_SIGMA_INVERTED` — H₇-σ as pre-registered (ADR-026 v2 §2, alternative `"greater"`) is **rejected in the opposite direction**. The mirrored bin formalised in ADR-026 v2.1 §1 (alternative `"less"`, `|d| ≥ 0.5`, `p < 0.005`) is supported with verdicts agreeing across primary and transparency reportings.
 **Operational status:** inverted directional signal published with full data, ADR chain, per-seed CSV, verdict file, and SHA-pinned freeze manifest.
 **Predecessor:** [v0.2.0-h6-rejected](#release-v020-h6-rejected) (sibling falsification).
-**DOI (v0.3.0):** TBD (Zenodo, to be minted post-tag) — concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
+**DOI (v0.3.0):** [10.5281/zenodo.20096664](https://doi.org/10.5281/zenodo.20096664) — concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
 
 ---
 

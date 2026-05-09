@@ -7,6 +7,7 @@ control, v0.2.0), and **H₇-σ** (inverted directional signal, v0.3.0).
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![DOI concept](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
 [![DOI v0.2.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20094993.svg)](https://doi.org/10.5281/zenodo.20094993)
+[![DOI v0.3.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20096664.svg)](https://doi.org/10.5281/zenodo.20096664)
 [![Status: H5_REJECTED](https://img.shields.io/badge/H5-REJECTED-critical)](research/h5_verdict.json)
 [![Status: H6_FEEDBACK_ONLY](https://img.shields.io/badge/H6-FEEDBACK__ONLY-critical)](research/h6_gamma_verdict.json)
 [![Status: H7_SIGMA_INVERTED](https://img.shields.io/badge/H7--%CF%83-INVERTED-orange)](research/h7_sigma_verdict.json)
@@ -143,8 +144,8 @@ docs/adr/ADR-026-h7-sigma.md](docs/adr/ADR-026-h7-sigma.md) — H₇-σ pre-regi
   author  = {{The CAE Research Kit Authors}},
   year    = {2026},
   version = {v0.3.0-h7-σ-inverted},
-  doi     = {10.5281/zenodo.TBD},
-  url     = {https://doi.org/10.5281/zenodo.TBD},
+  doi     = {10.5281/zenodo.20096664},
+  url     = {https://doi.org/10.5281/zenodo.20096664},
   note    = {Verdict: H7\_SIGMA\_INVERTED (Cohen d = -0.7581, p\_less = 1.04e-05, n=30,
              pool [1400-1429]). Pre-registered inversion of the H1-greater prediction;
              mirrored bin formalised in ADR-026 v2.1. Concept DOI: 10.5281/zenodo.20091626.}

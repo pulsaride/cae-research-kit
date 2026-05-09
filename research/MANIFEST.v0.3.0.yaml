@@ -12,6 +12,7 @@ release:
   scientific_status: H7_SIGMA_INVERTED
   operational_status: inverted_directional_signal_published_with_full_data
   predecessor: v0.2.0-h6-rejected
+  doi: 10.5281/zenodo.20096664
   doi_concept: 10.5281/zenodo.20091626
 
 reproduction_image:
