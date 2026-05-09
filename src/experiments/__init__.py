@@ -23,7 +23,13 @@ from src.agents.random_agent import RandomAgent
 from src.agents.scripted_agent import ScriptedAgent
 from src.config.determinism import apply_cae_determinism
 from src.env.e0 import E0, E0Config
-from src.metrics.pressure import Wasserstein1, trajectory_redistribution
+
+# NB : src.metrics.pressure dépend de POT (`ot`), absent de certains
+# environnements de dev (.venv-h6 sans POT). On reporte l'import au
+# call-site pour permettre à src.experiments.portability_draw d'être
+# chargé indépendamment (ADR-033 audit gate, runner public chaîne σ).
+if False:  # type-checker hint only
+    from src.metrics.pressure import Wasserstein1, trajectory_redistribution  # noqa: F401
 
 OFFLINE_SEED: int = 99  # disjoint from evaluation seeds (>= 1000)
 
@@ -79,8 +85,9 @@ def _agent_factories(
     }
 
 
-def run_single(agent: Agent, env: E0, metric: Wasserstein1) -> RunResult:
+def run_single(agent: Agent, env: E0, metric: "Wasserstein1") -> RunResult:  # type: ignore[name-defined]
     """Run a full trajectory; return redistribution aggregates."""
+    from src.metrics.pressure import trajectory_redistribution
     fields = [env.observe()]
     while not env.is_done:
         a = agent.select_action(fields[-1])
@@ -122,9 +129,10 @@ def _train_pretrained_policy(base_config: E0Config) -> np.ndarray:
 def run_experiment(
     seeds: Iterable[int],
     base_config: E0Config | None = None,
-    metric: Wasserstein1 | None = None,
+    metric: "Wasserstein1 | None" = None,  # type: ignore[name-defined]
 ) -> list[RunResult]:
     """Paired loop: for each E0 seed, run A, B, R, P."""
+    from src.metrics.pressure import Wasserstein1
     base_config = base_config or E0Config()
     metric = metric or Wasserstein1()
     pretrained_policy = _train_pretrained_policy(base_config)
