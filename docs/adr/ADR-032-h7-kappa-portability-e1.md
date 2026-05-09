@@ -1,7 +1,8 @@
 # ADR-032 — Pré-enregistrement E₁ et protocole de portabilité κ
 
-**Statut** : PROPOSED
+**Statut** : ACCEPTED INTERNAL
 **Date d'ouverture** : 2026-05-09
+**Date d'acceptation interne** : 2026-05-09 (post-amendements §12, post-ADR-031.bis)
 **Statut terminal** : ACCEPTED INTERNAL (cf. §7.2). Pas de statut ACCEPTED distinct — voir ADR-031.bis.
 **Décideur** : CEO (verrous épistémiques V1-V2-V3 §7.1 ; aucun reviewer requis)
 **Amont** : ADR-031 ACCEPTED (séquence B-first), ADR-030 (spec M_κ figée), ADR-027 (chaîne statistique réutilisée), [doc_base/CAE_Roadmap_Strategique.md](../../doc_base/CAE_Roadmap_Strategique.md) §3.2 et §4.1
