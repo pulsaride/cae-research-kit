@@ -1,6 +1,6 @@
 # ADR-033 — Audit gate du runner public de la chaîne σ_κ
 
-**Statut** : PROPOSED
+**Statut** : ACCEPTED (2026-05-09)
 **Date d'ouverture** : 2026-05-10
 **Décideur** : CEO
 **Amont** : ADR-026 v2.1 (chaîne σ_κ, sample_markov), ADR-027 (chaîne statistique), ADR-030 (pré-reg κ ACCEPTED), ADR-031 (B-first), ADR-032 (pré-reg E₁, V3 §7.1), [research/MANIFEST.v0.4.0.yaml](../../research/MANIFEST.v0.4.0.yaml), [research/h7_kappa_run_results.csv](../../research/h7_kappa_run_results.csv)
@@ -186,10 +186,32 @@ Les ADTs associées (`tests/adt/test_audit_compare.py`, ≥ 8 cas : header misma
 À renseigner uniquement si PASS. Format imposé :
 
 ```
-audit_csv_sha256:        <à remplir>
-audit_report_sha256:     <à remplir>
-audit_compare_sha256:    <à remplir>
-audit_run_commit:        <à remplir>
-audit_passed_v1_commit:  <à remplir>
-date_acceptee:           <à remplir>
+audit_csv_sha256:        4a6815c2b12fcf6aeda241a2130bff0175a2e2efc8c76bcda95710261bd231b0  research/h7_kappa_audit_v04_iter2.csv
+audit_report_sha256:     386d993e653b16bdf690efaa4bd32a9d57662a25049479474907e08844fed65a  research/h7_kappa_audit_v04_iter2.report.txt
+audit_compare_sha256:    a55e3df1c1155f470fd2558203c5a807e7b7f11b6a8df723101d565617fac681  src/analysis/audit_compare.py
+audit_run_commit:        c15f313d46520ac87c9413303eaf62f622737e86
+audit_passed_v1_commit:  7bf0d9eb3a935ed7c1bed01dda3177f1efff1271
+date_acceptee:           2026-05-09
 ```
+
+### 11.1 Verdict synthétique
+
+- header_match : True
+- n_rows_reference / n_rows_candidate : 30 / 30
+- seeds_match : True
+- strict mismatches entiers (15 colonnes) : 0
+- max |Δ| float (14 colonnes) ≤ 4.5e-11 < atol 1e-9
+
+### 11.2 Note d'investigation §6.2
+
+L'audit iter1 (commit 2719191) a divergé strictement sur le témoin S
+(R / Mκ / M bit-identiques). L'investigation §6.2 #5 (CEO Plan α §1-4)
+a identifié par recherche exhaustive sur seed témoin 1500
+(90 combinaisons key × digest_size × byteorder, branche S isolée) une
+unique convention reproduisant `KL_S_M_corr` à 3.0e-11 près :
+
+  key=`obs_shuffle::{s}`, digest_size=8, byteorder=`big`
+
+Le correctif (commit c15f313, 1 fichier source + 1 ADT, 5+/5- lignes)
+rétablit l'alignement et ne touche ni V1, ni V2, ni V3, ni les
+tolérances §4.
