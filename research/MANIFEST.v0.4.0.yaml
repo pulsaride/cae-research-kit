@@ -1,0 +1,229 @@
+# MANIFEST v0.4.0-h7-κ-reverses
+#
+# Authority chain: ADR-026 v2.1 (σ chain frozen) → ADR-027 (statistical chain)
+# → ADR-028 (option A: κ before H8) → ADR-030 (κ pre-registration, ACCEPTED)
+# → this release. All SHAs are SHA-256 in hex.
+#
+# Sibling manifests: MANIFEST.v0.1.0.yaml, MANIFEST.v0.2.0.yaml, MANIFEST.v0.3.0.yaml.
+
+release:
+  tag: v0.4.0-h7-κ-reverses
+  date: 2026-05-09
+  scientific_status: KAPPA_REVERSES
+  operational_status: paradox_resolution_published_with_full_data
+  predecessor: v0.3.0-h7-σ-inverted
+  doi: TBD                       # to be pinned post-Zenodo mint
+  doi_concept: 10.5281/zenodo.20091626
+  one_line_claim: |
+    A single tick of memory on the previous local-pressure observation suffices
+    to break the H7-σ inverted-coupling signature. The σ-inversion is the
+    memoryless regime; adding m_t = O_{t-1} (1 tick, 0 parameters, no
+    learning) returns the agent to the structural side and beyond.
+
+reproduction_image:
+  inherits_from: v0.1.0-h5-rejected
+  name: cae-research-kit:0.1.0
+  image_id: sha256:f30bf02ce6e486153980c79e43e65bf5c195b4fd6ebf052f04ff10537e3ea78e
+  base: python:3.11.9-slim-bookworm
+  deterministic_fingerprint: 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
+
+h7_dev_environment:
+  python: 3.12.3
+  pinned:
+    numpy: 1.26.4
+    scipy: 1.12.0
+    pytest: 8.1.1
+  note: |
+    The H7 source tree (.forge_private/h7_dev/src/h7/) remains private at
+    v0.4.0 (same posture as v0.3.0 per ADR-029 §4.4). The published per-seed
+    CSV + verdict JSON + adjudicator I/O contract + Memory1Agent public
+    implementation (src/agents/memory1_agent.py) + 5 ADT (tests/adt/
+    test_memory1_agent.py) are sufficient to audit the κ statistical claim
+    independently. The κ runner and adjudicator SHAs are pinned below for
+    binary-level reproducibility.
+
+experiments:
+  h7_kappa:
+    pre_registration: docs/adr/ADR-030-h7-kappa-pre-registration.md
+    upstream_decision: docs/adr/ADR-028-h7-kappa-or-h8-pivot.md
+    inherits_statistical_chain: docs/adr/ADR-027-h7-sigma-statistical-chain.md
+    inherits_sigma_definitions: docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md
+    n_seeds: 30
+    seed_range: [1500, 1529]
+    seed_pool_reserved: [1500, 1599]
+    constants:
+      T_warmup: 5000
+      T_stat: 50000
+      B: 64
+      P_min: 0.0
+      P_max: 1.0
+      scalar: flatten_cell_tick
+      laplace: asymmetric_plus_one_on_Q_when_P_gt_0_and_Q_eq_0
+      entropy_correction: miller_madow
+    agent_under_test:
+      name: M_κ
+      class: src.agents.memory1_agent.Memory1Agent
+      sha256: 2684b171ac5759b9be5a5f5fddced1681558a35cdd5cbe67a47be76e727c7870
+      state: m_t ∈ [0,1]^G with G = grid_size; m_0 = 0
+      update_rule: m_{t+1} ← O_t (assignment, no parameter)
+      policy: A_t = argmax_i(m_t[i] − O_t[i]); tie-break smallest index
+      bootstrap: A_0 = argmin_i(O_0[i])
+      adt:
+        suite: tests/adt/test_memory1_agent.py
+        sha256: 01d8203e849c16f2d256efe241444746b1a589ddda16c6b708013e904dc941a9
+        n_tests: 5
+        all_passed: true
+        wall_clock_seconds: 0.24
+    test:
+      kind: paired_wilcoxon_signed_rank
+      tested_quantity: |
+        Δ_s = δ_σ^{M_κ}(s) − δ_σ^{R}(s),
+        where δ_σ^X(s) = D_KL(P_X(s)‖P_M(s)) − D_KL(P_S(s)‖P_M(s))
+      pairing: strict seed-to-seed; R, S, M re-simulated on identical seeds as M_κ
+      alternatives:
+        - greater
+        - less
+      zero_method: wilcox
+      alpha: 0.005
+      cohen_d_threshold_pass: 0.5
+      cohen_d_threshold_neutral: 0.2
+      double_reporting:
+        primary_field: Delta_kappa_corr
+        transparency_field: Delta_kappa_naive
+        disagreement_override: KAPPA_INCONCLUSIVE
+      sample_size_guard:
+        n_post_drop_min: 20
+        violation_override: KAPPA_INCONCLUSIVE
+      clip_override:
+        rule: any clip event ⇒ KAPPA_INCONCLUSIVE (stricter than σ)
+        observed_total_clip_events: 0
+    primary_result:
+      statistic_field: Delta_kappa_corr
+      wilcoxon_statistic_greater: 465.0
+      p_value_greater: 9.313225746154785e-10
+      p_value_less: 1.0
+      cohen_d: 2.6619418195906856
+      n_post_drop: 30
+      verdict_isolated_sigma: H7_SIGMA_STRUCTURAL_COUPLING
+      verdict_isolated: KAPPA_REVERSES
+    transparency_result:
+      statistic_field: Delta_kappa_naive
+      wilcoxon_statistic_greater: 465.0
+      p_value_greater: 9.313225746154785e-10
+      p_value_less: 1.0
+      cohen_d: 2.6619866378437654
+      n_post_drop: 30
+      verdict_isolated_sigma: H7_SIGMA_STRUCTURAL_COUPLING
+      verdict_isolated: KAPPA_REVERSES
+    verdicts_agree: true
+    verdict: KAPPA_REVERSES
+    diagnostics:
+      median_Delta_corr: 0.497928823642
+      median_Delta_naive: 0.497931323642
+      median_delta_sigma_R_corr: -0.16707908031899998     # confirms R still inverted on [1500-1529]
+      median_delta_sigma_Mk_corr: 0.25566726678350005     # M_κ crosses zero, lands structural
+      median_K_R: 39.5
+      median_K_Mk: 62.0
+      median_K_S: 62.0
+      median_K_M: 56.0
+      median_K_Mk_minus_K_R: 23.0                         # action-repertoire recovery
+      n_seeds_Delta_negative: 0
+      n_seeds_Delta_positive: 30
+      n_seeds_Delta_zero: 0
+      total_clip_events: 0
+    artefacts:
+      - path: research/h7_kappa_run_results.csv
+        sha256: 1c4c2cd0450bb646e72b742e99c6a9efda61d9d3c781d0f9a3815241062eae2c
+      - path: research/h7_kappa_verdict.json
+        sha256: 4b819de7a13f1ea84e6e0f53feb3834ce6cc0a8c345597566502a26308d3c1c2
+    interpretation: |
+      KAPPA_REVERSES: the H7-σ inverted-coupling signature is fully reversed
+      by adding a single tick of memory. Under the pre-registered tested
+      quantity Δ_s = δ_σ^{M_κ}(s) − δ_σ^{R}(s), Wilcoxon-greater p = 9.3e-10
+      with Cohen d = +2.66 on n = 30 seeds (30/30 with Δ_s > 0; not a single
+      counter-example). The transparency reporting on plug-in entropy yields
+      the identical verdict at the same p-value; verdicts_agree = true.
+
+      Operational reading. The action-repertoire diagnostic shifts from
+      median K_R = 39.5 (R, no memory; consistent with the σ inversion's
+      "concentration on a strict subset of state cells") to median K_Mκ = 62.0
+      (M_κ, one-tick memory; matches K_S = 62.0). The +23 cell recovery is
+      not noise: it is the agent leaving passive stabilisation and entering
+      active local-gradient navigation. Memory acts here not as a smoothing
+      filter but as a complexity-liberator on the action side.
+
+      Doctrinal claim (within ADR-026 v2.1 §7 vocabulary). The minimal
+      structural-coupling component identified in E₀ is local temporal
+      differentiation — i.e. the agent's ability to compare O_t with a single
+      previous observation. This component is sufficient (one tick, zero
+      parameters) to break the σ inversion. The paradox is therefore
+      kinetic, not geometric. ADR-028's Option A is vindicated: H8 (deeper
+      architectural pivot) is not required to explain the σ regime.
+
+decision_records:
+  ADR-028:
+    path: docs/adr/ADR-028-h7-kappa-or-h8-pivot.md
+    sha256: 002b597131667a88771bbc3cfd3d34f1640f18300c173bb4f3055ac66d8c69ee
+    ruling: Option A (H7-κ first) accepted over H8 pivot.
+  ADR-030:
+    path: docs/adr/ADR-030-h7-kappa-pre-registration.md
+    sha256: bc552e461c58be1021e7f5c674790befaec1c142fdbe2e71dc944f652baed27f
+    ruling: |
+      κ pre-registered with strict pre-tirage freeze (manifest κ v1
+      a0322891031ae28b70f51a4f3ec711a854061317c4682ac113d7ab7166a7d4fb).
+      Tirage authorised on [1500-1529] only after agent + ADT + runner +
+      adjudicator SHAs were all pinned. ADR-030 flipped DRAFT → ACCEPTED
+      simultaneously with this manifest.
+
+frozen_adr_sha256:
+  ADR-026:                      7e8e4ea839ad826003014d731e9baeeab04b9f33008079a46b07178884abc9ae
+  ADR-026-v2.1-amendment:       2bdf8ae9eed3684a1cfcf05a884d664fa66aea868ad8528b43db61f1fc4e35c8
+  ADR-027:                      7d755b94e58e9ac52fe2c12867d7ee6d71906c3d3b8e3608a857d282294d76fb
+  ADR-028:                      002b597131667a88771bbc3cfd3d34f1640f18300c173bb4f3055ac66d8c69ee
+  ADR-029:                      db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc
+  ADR-030:                      bc552e461c58be1021e7f5c674790befaec1c142fdbe2e71dc944f652baed27f
+
+# H7-κ private freeze chain (recorded for audit; private files NOT in this release)
+private_freeze_chain_sha256:
+  H7_KAPPA_FREEZE_MANIFEST_v1:  a0322891031ae28b70f51a4f3ec711a854061317c4682ac113d7ab7166a7d4fb
+  kappa_runner.py:              9428d3b7d1aa2dfdf5e240c4c5c1ae4202526cbc634ecbb1044b286afa0907aa
+  kappa_adjudicator.py:         16441e1399dcead5fffaa0162b81a7e599c01af2a2b07134dfc396129d57f5e3
+  # σ chain (inherited bit-identical from v0.3.0; verified post-κ run)
+  sigma_runner.py:              1ae4a877d410b3f52694cdae5ad309752246e5b1c8b43f8527e583e1b0425deb
+  sigma_adjudicator.py:         f6c5aeff494dfd323be78e4bbc6160eb3e6ece46d4941805828847f3d0a1b480
+  h7_kl.py:                     5b4520d6e6231006e548b8ac436ded7baf4d887cdea0a77f25ef0bfaaae234c4
+  scipy_version:                "1.12.0"
+  numpy_version:                "1.26.4"
+
+# Public κ artefacts (ship with this release)
+public_kappa_artefacts_sha256:
+  src/agents/memory1_agent.py:        2684b171ac5759b9be5a5f5fddced1681558a35cdd5cbe67a47be76e727c7870
+  tests/adt/test_memory1_agent.py:    01d8203e849c16f2d256efe241444746b1a589ddda16c6b708013e904dc941a9
+
+audit_trail:
+  doctrine: |
+    H₅ (v0.1.0) — null regime confirmed (rejection of pressure-scaling claim).
+    H₆ (v0.2.0) — apparent topological signature falsified by obs-shuffled control.
+    H₇-σ (v0.3.0) — directional inversion published honestly: real loop closer
+      to Markov-null than obs-shuffled control is.
+    H₇-κ (v0.4.0) — paradox resolved: a single tick of memory on the previous
+      local-pressure observation breaks the σ inversion (Cohen d = +2.66,
+      p = 9.3e-10, 30/30 seeds, 0 clip events). The minimal coupling
+      component is local temporal differentiation. The σ inversion is the
+      memoryless regime, not an architectural dead end.
+
+      Five consecutive pre-registered, frozen, falsification-disciplined
+      experiments, each published with full data, ADR chain, and a
+      Zenodo DOI. The instrument earns trust by refusing to confirm itself,
+      by publishing inverted signals as cleanly as confirmations, AND by
+      decomposing those inversions into their minimal structural component
+      under the same protocol.
+  pool_status:
+    "[1000-1029]":  burned (H5)
+    "[1200-1229]":  burned (H6 β)
+    "[1300-1329]":  burned (H6 γ)
+    "[1400-1429]":  burned (H7-σ main)
+    "[9000-9009]":  burned (H7-σ pilot, private)
+    "[9100-9109]":  available (never drawn; reserved for remediation only)
+    "[1500-1529]":  burned (H7-κ main, this release)
+    "[1530-1599]":  reserved within H7-κ pool; FROZEN pending future ADR

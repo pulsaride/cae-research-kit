@@ -1,8 +1,9 @@
 # CAE Research Kit
 
 A frozen, deterministic, falsification-driven measurement instrument.
-Three published hypotheses: **H₅** (rejected, v0.1.0), **H₆** (rejected by
-control, v0.2.0), and **H₇-σ** (inverted directional signal, v0.3.0).
+Four published hypotheses: **H₅** (rejected, v0.1.0), **H₆** (rejected by
+control, v0.2.0), **H₇-σ** (inverted directional signal, v0.3.0), and
+**H₇-κ** (σ-inversion reversed by single-tick memory, v0.4.0).
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![DOI concept](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
@@ -11,14 +12,17 @@ control, v0.2.0), and **H₇-σ** (inverted directional signal, v0.3.0).
 [![Status: H5_REJECTED](https://img.shields.io/badge/H5-REJECTED-critical)](research/h5_verdict.json)
 [![Status: H6_FEEDBACK_ONLY](https://img.shields.io/badge/H6-FEEDBACK__ONLY-critical)](research/h6_gamma_verdict.json)
 [![Status: H7_SIGMA_INVERTED](https://img.shields.io/badge/H7--%CF%83-INVERTED-orange)](research/h7_sigma_verdict.json)
+[![Status: KAPPA_REVERSES](https://img.shields.io/badge/H7--%CE%BA-REVERSES-blue)](research/h7_kappa_verdict.json)
 [![ADT: 50/50](https://img.shields.io/badge/ADT--H5-50%2F50%20PASS-brightgreen)](tests/adt)
 [![Python: 3.11.9](https://img.shields.io/badge/python-3.11.9-blue)](Dockerfile)
 
 > **The discipline is the product.**
 >
-> Three consecutive published, pre-registered, frozen experiments. The
-> instrument earns trust by refusing to confirm itself — *and* by publishing
-> inverted directional signals with the same rigour as confirmations.
+> Four consecutive published, pre-registered, frozen experiments. The
+> instrument earns trust by refusing to confirm itself, by publishing
+> inverted directional signals as cleanly as confirmations, *and* by
+> decomposing those inversions into their minimal structural component
+> under the same protocol.
 
 ---
 
@@ -131,33 +135,60 @@ vocabulary (ADR-026 v2.1 §7): *inverted coupling*, *stabilising feedback*
 in the strict sense `d ≤ −0.5 ∧ p_less < 0.005`. All cognitive vocabulary
 remains banned.
 
-## Reproducibility
-docs/adr/ADR-026-h7-sigma.md](docs/adr/ADR-026-h7-sigma.md) — H₇-σ pre-registration (v2 frozen)
-- [docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md](docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md) — H₇-σ amendment formalising INVERTED bin
-- [docs/adr/ADR-027-h7-sigma-statistical-chain.md](docs/adr/ADR-027-h7-sigma-statistical-chain.md) — H₇-σ statistical chain (paired Wilcoxon)
-- [docs/adr/ADR-029-h7-sigma-release.md](docs/adr/ADR-029-h7-sigma-release.md) — H₇-σ release decision
-- [RELEASE.md](RELEASE.md) — release notes (v0.1.0 + v0.2.0 + v0.3.0)
-- [research/MANIFEST.v0.1.0.yaml](research/MANIFEST.v0.1.0.yaml) — H₅ manifest
-- [research/MANIFEST.v0.2.0.yaml](research/MANIFEST.v0.2.0.yaml) — H₆ manifest
-- [research/MANIFEST.v0.3.0.ya3_0,
-  title   = {CAE Research Kit: H7-σ Inverted — Real Feedback Loop Closer to Markov-Null than Obs-Shuffled Control},
-  author  = {{The CAE Research Kit Authors}},
-  year    = {2026},
-  version = {v0.3.0-h7-σ-inverted},
-  doi     = {10.5281/zenodo.20096664},
-  url     = {https://doi.org/10.5281/zenodo.20096664},
-  note    = {Verdict: H7\_SIGMA\_INVERTED (Cohen d = -0.7581, p\_less = 1.04e-05, n=30,
-             pool [1400-1429]). Pre-registered inversion of the H1-greater prediction;
-             mirrored bin formalised in ADR-026 v2.1. Concept DOI: 10.5281/zenodo.20091626.}
-}
+### v0.4.0 — H₇-κ (frozen)
 
-@software{cae_research_kit_v0_ml](research/MANIFEST.v0.3.0.yaml) — H₇-σ
+**`KAPPA_REVERSES`** — H₇-κ pre-registered (ADR-030) the question of whether
+a **single tick of memory** on the previous local-pressure observation
+suffices to break the H7-σ inverted-coupling signature. Same pre-registered
+statistical chain (paired Wilcoxon, mirrored alternatives, α = 0.005,
+Miller-Madow + plug-in double reporting) applied to the per-seed test
+quantity $\Delta_s = \delta_\sigma^{M_\kappa}(s) - \delta_\sigma^{R}(s)$ on
+the disjoint pre-reserved pool [1500-1529]. The agent under test (`M_κ`,
+[src/agents/memory1_agent.py](src/agents/memory1_agent.py)) carries one
+buffer $m_t \in [0,1]^G$, $m_0 = \mathbf{0}$, updated by $m_{t+1} \leftarrow O_t$
+(no parameter), policy $A_t = \arg\max_i (m_t[i] - O_t[i])$ — zero learning,
+zero gradient.
+
+| Branch | Cohen's d | Wilcoxon p (greater) | Verdict |
+|---|---:|---:|---|
+| Primary (`Δ_κ_corr`, Miller-Madow corrected) | **+2.6619** | **9.31e-10** | `KAPPA_REVERSES` |
+| Transparency (`Δ_κ_naive`, plug-in entropy) | +2.6620 | 9.31e-10 | `KAPPA_REVERSES` |
+
+`verdicts_agree = true`, `total_clip_events = 0`, `n_post_drop = 30`,
+**30 / 30 seeds with $\Delta_s > 0$** (no counter-example).
+
+Diagnostic action-repertoire shift: median K_R = 39.5 (R, no memory; consistent
+with the σ "concentration on a strict subset") → median K_Mκ = 62.0 (one-tick
+memory; matches K_S = 62.0 of the obs-shuffled control). The +23 cell recovery
+is the agent leaving passive stabilisation and entering active local-gradient
+navigation; median $\delta_\sigma^{M_\kappa}$ crosses zero (+0.256) while
+median $\delta_\sigma^{R}$ remains inverted (−0.167) on the same disjoint pool.
+
+Artefacts:
+[research/h7_kappa_verdict.json](research/h7_kappa_verdict.json) ·
+[research/h7_kappa_run_results.csv](research/h7_kappa_run_results.csv)
+
+Decision records:
+[docs/adr/ADR-028-h7-kappa-or-h8-pivot.md](docs/adr/ADR-028-h7-kappa-or-h8-pivot.md) ·
+[docs/adr/ADR-030-h7-kappa-pre-registration.md](docs/adr/ADR-030-h7-kappa-pre-registration.md)
+
+**Plain reading.** A single tick of memory ($t-1$ on local pressure, zero
+parameters, zero learning) is sufficient to **reverse** the σ inversion. The
+H7-σ inverted-coupling regime is therefore not an architectural dead end —
+it is the *memoryless* regime. The minimal structural-coupling component
+identified in E₀ is **local temporal differentiation**. The paradox is
+kinetic, not geometric. ADR-028's Option A (decompose with H7-κ before
+attempting the deeper H8 pivot) is vindicated.
+
+## Reproducibility
+
+The v0.1.0 reference fingerprint is the immutable substrate for all
+subsequent releases (E₀, agents base, KL chain). Any reproduction that
+does not return exactly this fingerprint is invalid.
 
 ```
 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
 ```
-
-Any reproduction that does not return exactly this fingerprint is invalid.
 
 ```bash
 docker build -t cae-research-kit:0.1.0 .
@@ -187,13 +218,48 @@ docs/           Public protocol and ADRs
 - [docs/adr/ADR-023.ter-paired-wilcoxon.md](docs/adr/ADR-023.ter-paired-wilcoxon.md) — H6-β test specification
 - [docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md](docs/adr/ADR-024-h6-gamma-obs-shuffled-control.md) — H6-γ control pre-registration
 - [docs/adr/ADR-025-h6-release-decision.md](docs/adr/ADR-025-h6-release-decision.md) — H₆ release decision
-- [RELEASE.md](RELEASE.md) — release notes (v0.1.0 + v0.2.0)
+- [docs/adr/ADR-026-h7-sigma.md](docs/adr/ADR-026-h7-sigma.md) — H₇-σ pre-registration (v2 frozen)
+- [docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md](docs/adr/ADR-026-v2.1-h7-sigma-amendment-inverted.md) — H₇-σ amendment formalising INVERTED bin
+- [docs/adr/ADR-027-h7-sigma-statistical-chain.md](docs/adr/ADR-027-h7-sigma-statistical-chain.md) — H₇-σ statistical chain (paired Wilcoxon)
+- [docs/adr/ADR-028-h7-kappa-or-h8-pivot.md](docs/adr/ADR-028-h7-kappa-or-h8-pivot.md) — H₇-κ vs H8 decision (Option A)
+- [docs/adr/ADR-029-h7-sigma-release.md](docs/adr/ADR-029-h7-sigma-release.md) — H₇-σ release decision
+- [docs/adr/ADR-030-h7-kappa-pre-registration.md](docs/adr/ADR-030-h7-kappa-pre-registration.md) — H₇-κ pre-registration
+- [RELEASE.md](RELEASE.md) — release notes (v0.1.0 + v0.2.0 + v0.3.0 + v0.4.0)
 - [research/MANIFEST.v0.1.0.yaml](research/MANIFEST.v0.1.0.yaml) — H₅ manifest
 - [research/MANIFEST.v0.2.0.yaml](research/MANIFEST.v0.2.0.yaml) — H₆ manifest
+- [research/MANIFEST.v0.3.0.yaml](research/MANIFEST.v0.3.0.yaml) — H₇-σ manifest
+- [research/MANIFEST.v0.4.0.yaml](research/MANIFEST.v0.4.0.yaml) — H₇-κ manifest
 
 ## Citation
 
 ```bibtex
+@software{cae_research_kit_v0_4_0,
+  title   = {CAE Research Kit: H7-κ Reverses — A Single Tick of Memory Breaks the σ Inversion},
+  author  = {{The CAE Research Kit Authors}},
+  year    = {2026},
+  version = {v0.4.0-h7-κ-reverses},
+  doi     = {10.5281/zenodo.TBD},
+  url     = {https://doi.org/10.5281/zenodo.TBD},
+  note    = {Verdict: KAPPA\_REVERSES (Cohen d = +2.6619, p\_greater = 9.31e-10, n=30,
+             pool [1500-1529], 30/30 seeds with Δ > 0, 0 clip events).
+             Tested quantity: Δ\_s = δ\_σ\textasciicircum{}M\_κ(s) - δ\_σ\textasciicircum{}R(s).
+             Agent M\_κ carries one buffer m\_t \in [0,1]\textasciicircum{}G updated by
+             m\_\{t+1\} \leftarrow O\_t (no parameter, no learning); policy A\_t = argmax\_i(m\_t[i] - O\_t[i]).
+             Resolves the H7-σ inversion paradox. Concept DOI: 10.5281/zenodo.20091626.}
+}
+
+@software{cae_research_kit_v0_3_0,
+  title   = {CAE Research Kit: H7-σ Inverted — Real Feedback Loop Closer to Markov-Null than Obs-Shuffled Control},
+  author  = {{The CAE Research Kit Authors}},
+  year    = {2026},
+  version = {v0.3.0-h7-σ-inverted},
+  doi     = {10.5281/zenodo.20096664},
+  url     = {https://doi.org/10.5281/zenodo.20096664},
+  note    = {Verdict: H7\_SIGMA\_INVERTED (Cohen d = -0.7581, p\_less = 1.04e-05, n=30,
+             pool [1400-1429]). Pre-registered inversion of the H1-greater prediction;
+             mirrored bin formalised in ADR-026 v2.1. Concept DOI: 10.5281/zenodo.20091626.}
+}
+
 @software{cae_research_kit_v0_2_0,
   title   = {CAE Research Kit: H6 Falsified — Topological Signatures Reclassified as Feedback Artefacts},
   author  = {{The CAE Research Kit Authors}},

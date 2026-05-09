@@ -1,0 +1,156 @@
+{
+  "test": "wilcoxon",
+  "alternatives": [
+    "greater",
+    "less"
+  ],
+  "zero_method": "wilcox",
+  "n": 30,
+  "alpha_per_branch": 0.005,
+  "d_threshold_pass": 0.5,
+  "d_threshold_neutral": 0.2,
+  "tested_quantity": "Delta_s = delta_sigma_Mk(s) - delta_sigma_R(s)",
+  "primary": {
+    "statistic_field": "Delta_kappa_corr",
+    "wilcoxon_statistic_greater": 465.0,
+    "p_value_greater": 9.313225746154785e-10,
+    "p_value_less": 1.0,
+    "cohen_d": 2.6619484969735416,
+    "n_post_drop": 30,
+    "verdict_isolated_sigma": "H7_SIGMA_STRUCTURAL_COUPLING",
+    "verdict_isolated": "KAPPA_REVERSES"
+  },
+  "transparency": {
+    "statistic_field": "Delta_kappa_naive",
+    "wilcoxon_statistic_greater": 465.0,
+    "p_value_greater": 9.313225746154785e-10,
+    "p_value_less": 1.0,
+    "cohen_d": 2.661962920739951,
+    "n_post_drop": 30,
+    "verdict_isolated_sigma": "H7_SIGMA_STRUCTURAL_COUPLING",
+    "verdict_isolated": "KAPPA_REVERSES",
+    "notes": []
+  },
+  "verdicts_agree": true,
+  "verdict": "KAPPA_REVERSES",
+  "diagnostics": {
+    "median_Delta_corr": 0.497928823642,
+    "median_Delta_naive": 0.497931323642,
+    "median_delta_sigma_R_corr": -0.16707908031899998,
+    "median_delta_sigma_Mk_corr": 0.25566726678350005,
+    "median_K_R": 39.5,
+    "median_K_Mk": 62.0,
+    "median_K_S": 62.0,
+    "median_K_Mk_minus_K_R": 23.0,
+    "n_seeds_Delta_negative": 0,
+    "n_seeds_Delta_positive": 30,
+    "n_seeds_Delta_zero": 0,
+    "total_clip_events": 0
+  },
+  "decision_record_ref": "ADR-030-h7-kappa-pre-registration.md",
+  "verdict_label_mapping": {
+    "H7_SIGMA_INVERTED": "KAPPA_REINFORCES",
+    "H7_SIGMA_STRUCTURAL_COUPLING": "KAPPA_REVERSES",
+    "H7_SIGMA_FEEDBACK_ONLY": "KAPPA_NEUTRAL",
+    "H7_SIGMA_INCONCLUSIVE": "KAPPA_INCONCLUSIVE"
+  },
+  "code_sha256": {
+    "scipy_version": "1.12.0",
+    "numpy_version": "1.26.4",
+    "_meta": {
+      "manifest_name": "H7_KAPPA_FREEZE_MANIFEST",
+      "version": "v1 (runner + adjudicator frozen, tir authorized on 1500..1529)",
+      "created_utc": "2026-05-09",
+      "binds_adrs": [
+        "ADR-026-v2-h7-sigma-FROZEN.md",
+        "ADR-026-v2.1-h7-sigma-AMENDMENT-inverted.md",
+        "ADR-027-h7-sigma-statistical-chain.md",
+        "ADR-028-h7-kappa-or-h8-pivot.md (Option A accepted)",
+        "ADR-030-h7-kappa-pre-registration.md (ACCEPTED on this v1 manifest)"
+      ],
+      "release_target": "v0.4.0-h7-\u03ba-{reinforces|neutral|reverses|inconclusive}",
+      "seed_pool_reserved": "1500..1529 (30 seeds, of [1500-1599])",
+      "tir_authorized": true,
+      "tir_blockers": []
+    },
+    "kappa_artefacts": {
+      "src/agents/memory1_agent.py": "2684b171ac5759b9be5a5f5fddced1681558a35cdd5cbe67a47be76e727c7870",
+      "tests/adt/test_memory1_agent.py": "01d8203e849c16f2d256efe241444746b1a589ddda16c6b708013e904dc941a9",
+      "h7_dev/src/h7/kappa_runner.py": "9428d3b7d1aa2dfdf5e240c4c5c1ae4202526cbc634ecbb1044b286afa0907aa",
+      "h7_dev/src/h7/kappa_adjudicator.py": "16441e1399dcead5fffaa0162b81a7e599c01af2a2b07134dfc396129d57f5e3"
+    },
+    "kappa_adt_results": {
+      "tests_run": 5,
+      "tests_passed": 5,
+      "wall_clock_seconds": 0.24,
+      "pytest_version": "8.1.1",
+      "command": "pytest tests/adt/test_memory1_agent.py -v"
+    },
+    "kappa_adrs_public": {
+      "docs/adr/ADR-028-h7-kappa-or-h8-pivot.md": "002b597131667a88771bbc3cfd3d34f1640f18300c173bb4f3055ac66d8c69ee",
+      "docs/adr/ADR-030-h7-kappa-pre-registration.md": "90f28b1eac6deccbc84c01380c75cf93990189d9fbb0bbbb1200163c446b698c"
+    },
+    "sigma_chain_inherited_immutable": {
+      "ADR-026-v2-h7-sigma-FROZEN.md": "7e8e4ea839ad826003014d731e9baeeab04b9f33008079a46b07178884abc9ae",
+      "ADR-026-v2.1-h7-sigma-AMENDMENT-inverted.md": "2bdf8ae9eed3684a1cfcf05a884d664fa66aea868ad8528b43db61f1fc4e35c8",
+      "ADR-027-h7-sigma-statistical-chain.md": "7d755b94e58e9ac52fe2c12867d7ee6d71906c3d3b8e3608a857d282294d76fb",
+      "ADR-029-h7-sigma-release.md": "db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc",
+      "h7_dev/src/h7/sigma_runner.py": "1ae4a877d410b3f52694cdae5ad309752246e5b1c8b43f8527e583e1b0425deb",
+      "h7_dev/src/h7/sigma_adjudicator.py": "f6c5aeff494dfd323be78e4bbc6160eb3e6ece46d4941805828847f3d0a1b480",
+      "h7_dev/src/h7/kl.py": "5b4520d6e6231006e548b8ac436ded7baf4d887cdea0a77f25ef0bfaaae234c4",
+      "h7_sigma_run_results.csv": "90ee2b80415178fe75cb9e1bd52350e980a6f260c7b7fc0fd65b65f022e674a3"
+    },
+    "env_substrate_pinned": {
+      "src/env/e0.py": "65f55ec30cd0c29130a4607db3f75a9578c504fb33a86130a0d53920cd20d7f9",
+      "src/agents/base.py": "1570a21ab770ff32d6e1b1efe7406073fe7cb8ee5eae5e0622b37e7b09612ef3",
+      "e0_fingerprint": "406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f"
+    },
+    "constants_inherited_from_sigma": {
+      "T_warmup": 5000,
+      "T_stat": 50000,
+      "B": 64,
+      "P_range": [
+        0.0,
+        1.0
+      ],
+      "P_clip": "strict",
+      "n_seeds": 30,
+      "scalar_op": "flatten(cell, tick)",
+      "laplace_smoothing": "asymmetric +1 on Q where P>0 \u2227 Q=0",
+      "entropy_primary": "Miller-Madow",
+      "entropy_transparency": "plug-in (naive)"
+    },
+    "statistical_chain_inherited": {
+      "test": "scipy.stats.wilcoxon",
+      "zero_method": "wilcox",
+      "alternatives": [
+        "greater",
+        "less"
+      ],
+      "alpha_per_branch": 0.005,
+      "cohen_d_pass_threshold": 0.5,
+      "cohen_d_feedback_threshold": 0.2,
+      "bonferroni_required": false,
+      "bonferroni_justification": "rejection regions {d>=+0.5} and {d<=-0.5} disjoint; procedurally equivalent to pre-registered two-sided"
+    },
+    "verdict_bins_kappa": {
+      "KAPPA_REINFORCES": "d <= -0.5 AND p_less < 0.005",
+      "KAPPA_REVERSES": "d >= +0.5 AND p_greater < 0.005",
+      "KAPPA_NEUTRAL": "|d| < 0.2 AND p_greater >= 0.005 AND p_less >= 0.005",
+      "KAPPA_INCONCLUSIVE": "all other cases OR total_clip_events>0 OR n_post_drop<25 OR verdicts_agree==false"
+    },
+    "tested_quantity": {
+      "definition": "Delta_s = delta_sigma_M_kappa(s) - delta_sigma_R(s)",
+      "where": "delta_sigma_X(s) = D_KL(P_X(s) || P_M(s)) - D_KL(P_S(s) || P_M(s))",
+      "pairing": "strict seed-to-seed; R, S, M re-simulated on the same 1500..1529 seeds as M_kappa"
+    },
+    "adjudicator_decision": "FORK (kappa_adjudicator.py thin wrapper, ~30 LOC over sigma chain) \u2014 keeps \u03c3 byte-frozen, publishes \u03ba-native verdict labels.",
+    "adt_kappa_smoke_after_v1": {
+      "runner_ast_parse": "OK",
+      "adjudicator_ast_parse": "OK",
+      "runner_import": "OK (30 seeds in pool, 29 CSV columns)",
+      "adjudicator_import": "OK (verdict mapping loaded)"
+    },
+    "next_steps_to_v1": []
+  }
+}

@@ -1,13 +1,15 @@
 # ADR-030 — Pré-enregistrement H7-κ : agent à mémoire-1 sur pression locale
 
-**Statut** : DRAFT (à figer avant tirage de seeds dans `[1500-1599]`)
+**Statut** : ACCEPTED
 **Date d'ouverture** : 2026-05-09
+**Date de gel pré-tirage** : 2026-05-09 (manifest κ v1 SHA `a0322891031ae28b70f51a4f3ec711a854061317c4682ac113d7ab7166a7d4fb`, `tir_authorized: true`, tirage autorisé sur `1500..1529`)
 **Décideur** : CEO
 **Amont** : ADR-026 v2.1 (chaîne σ figée), ADR-027 (chaîne statistique), ADR-028 §7
 (décision Option A), ADR-029 (release v0.3.0)
 **Aval** : ADR-031 *seulement si* la chaîne statistique κ diverge de ADR-027
 **Pool ressources** : `[1500-1599]`, premiers 30 seeds (`1500..1529`)
-**Release cible** : `v0.4.0-h7-κ-{reinforces|neutral|reverses|inconclusive}`
+**Release effectuée** : `v0.4.0-h7-κ-reverses` (verdict `KAPPA_REVERSES`,
+Cohen $d = +2.66$, $p_{>} = 9.31\times 10^{-10}$, 30/30 seeds avec $\Delta_\kappa > 0$, 0 clip events)
 
 ---
 

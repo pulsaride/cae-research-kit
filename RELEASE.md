@@ -1,3 +1,169 @@
+# Release v0.4.0-h7-κ-reverses
+
+**Title:** *H₇-κ Reverses: A Single Tick of Memory Breaks the σ Inversion*
+**Date:** 2026-05-09
+**Scientific status:** `KAPPA_REVERSES` — the H7-σ inverted-coupling signature is fully reversed by adding a single tick of local-pressure memory. Both branches of the pre-registered double reporting (Miller-Madow corrected primary, plug-in transparency) agree at the same p-value.
+**Operational status:** paradox-resolution published with full data, ADR chain, public agent + ADT, per-seed CSV, verdict file, and SHA-pinned freeze manifest (κ v1).
+**Predecessor:** [v0.3.0-h7-σ-inverted](#release-v030-h7-σ-inverted) (σ-inversion is the regime κ now decomposes).
+**DOI (v0.4.0):** TBD — to be pinned post-Zenodo mint. Concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
+
+---
+
+## 1. Abstract (no marketing)
+
+H₇-σ (v0.3.0) published an *inverted* coupling signature: the real
+feedback loop produced an action-pressure stationary distribution
+*closer* to the Markov-null surrogate than the obs-shuffled control's
+distribution was, with median diagnostic `K_R − K_S = −19` on B = 64
+bins. The interpretation question left open was whether this inversion
+was an architectural dead end (requiring an H8 pivot) or a *kinetic*
+artefact of the agent being **memoryless** (in which case adding the
+minimal possible memory should suffice to break it).
+
+ADR-028 (Option A) accepted the κ-decomposition route. ADR-030
+pre-registered H₇-κ under the **same** statistical chain as H₇-σ
+(paired Wilcoxon, both alternatives, α = 0.005, Cohen d ≥ 0.5,
+Miller-Madow + plug-in double reporting), with one new agent under test
+(`M_κ`) defined by:
+
+- a single buffer $m_t \in [0,1]^G$ with $G = $ `grid_size`, $m_0 = \mathbf{0}$,
+- update rule $m_{t+1} \leftarrow O_t$ (assignment, **no parameter**),
+- policy $A_t = \arg\max_i (m_t[i] - O_t[i])$, tie-break smallest index,
+- bootstrap $A_0 = \arg\min_i O_0[i]$.
+
+Zero gradient, zero learning, zero hyperparameter. The tested per-seed
+quantity is the σ-Δ between M_κ and R on identical seeds:
+
+$$ \Delta_s \;=\; \delta_\sigma^{M_\kappa}(s) \;-\; \delta_\sigma^{R}(s),
+\qquad \delta_\sigma^{X}(s) \;=\; D_{\mathrm{KL}}(P_X(s) \,\|\, P_M(s))
+\;-\; D_{\mathrm{KL}}(P_S(s) \,\|\, P_M(s)). $$
+
+The frozen main run on the disjoint pre-reserved pool [1500-1529]
+(n = 30, all 30 seeds drawn from the κ-reserved pool [1500-1599]) produced:
+
+| branch | Cohen d | Wilcoxon p (greater) | Wilcoxon p (less) | n_post-drop | verdict |
+|---|---:|---:|---:|---:|---|
+| primary `Δ_κ_corr` | **+2.6619** | **9.31 × 10⁻¹⁰** | 1.0 | 30 | `KAPPA_REVERSES` |
+| transparency `Δ_κ_naive` | +2.6620 | 9.31 × 10⁻¹⁰ | 1.0 | 30 | `KAPPA_REVERSES` |
+
+`verdicts_agree = true`. `total_clip_events = 0`. **30 / 30 seeds with
+$\Delta_s > 0$** (no counter-example). Median $\Delta_\kappa = +0.498$.
+
+Diagnostic action-repertoire shift on the same disjoint pool:
+
+- median $\delta_\sigma^{R} = -0.167$ (R remains σ-inverted out-of-sample, reproducing v0.3.0)
+- median $\delta_\sigma^{M_\kappa} = +0.256$ (M_κ crosses zero, lands structural-side)
+- median $K_R = 39.5$, median $K_{M_\kappa} = 62.0$, median $K_S = 62.0$, median $K_M = 56.0$
+- median $K_{M_\kappa} - K_R = +23$ cells (action repertoire recovered to the obs-shuffled level)
+
+## 2. What this release ships
+
+| Path | Description | SHA-256 |
+|---|---|---|
+| `research/h7_kappa_verdict.json` | adjudicator output (verdict + p, d, diagnostics) | `4b819de7…08d3c1c2` |
+| `research/h7_kappa_run_results.csv` | per-seed (30 rows × 29 cols) | `1c4c2cd0…062eae2c` |
+| `research/MANIFEST.v0.4.0.yaml` | full release manifest + private freeze chain | — |
+| `src/agents/memory1_agent.py` | M_κ public implementation | `2684b171…e727c7870` |
+| `tests/adt/test_memory1_agent.py` | 5 ADT (κ-1 determinism, κ-2 interface, κ-3 m=O, κ-4 A_0=argmin, κ-5 obs guard); 5/5 PASS in 0.24 s | `01d8203e…04dc941a9` |
+| `docs/adr/ADR-028-h7-kappa-or-h8-pivot.md` | Option A decision | `002b5971…c66d8c69ee` |
+| `docs/adr/ADR-030-h7-kappa-pre-registration.md` | H₇-κ pre-registration (ACCEPTED on κ manifest v1) | `bc552e46…2baed27f` |
+
+**Not shipped (per posture inherited from ADR-029 §4.4):** the κ runner
+(`kappa_runner.py`, SHA `9428d3b7…`) and κ adjudicator
+(`kappa_adjudicator.py`, SHA `16441e13…`) remain in
+`.forge_private/h7_dev/src/h7/` for the same reason σ runner/adjudicator
+were withheld at v0.3.0. The κ adjudicator is a thin wrapper (~30
+specific LOC) over the σ chain — it reuses the σ-tested-and-frozen
+Wilcoxon code byte-for-byte and only renames verdicts via a static map
+(`H7_SIGMA_INVERTED → KAPPA_REINFORCES`,
+`H7_SIGMA_STRUCTURAL_COUPLING → KAPPA_REVERSES`,
+`H7_SIGMA_FEEDBACK_ONLY → KAPPA_NEUTRAL`,
+`H7_SIGMA_INCONCLUSIVE → KAPPA_INCONCLUSIVE`). All private SHAs
+(including the σ chain re-confirmed bit-identical post-κ run) are
+recorded in `research/MANIFEST.v0.4.0.yaml` under
+`private_freeze_chain_sha256` for audit. The published per-seed CSV +
+verdict JSON + Memory1Agent + ADT are sufficient to reproduce the κ
+statistical claim independently.
+
+## 3. Where the value is
+
+This release publishes a **paradox resolution**:
+
+- The σ inverted-coupling signature, previously without explanation, is
+  now identified as the **memoryless regime** of the agent class on E₀.
+- A minimal causal probe (`m_t = O_{t-1}`, zero parameters) is sufficient
+  to reverse the signature with effect size $d = +2.66$ at $p = 9.3 \times 10^{-10}$
+  on n = 30 seeds, with not a single counter-example.
+- The diagnostic +23-cell recovery on $K_{M_\kappa} - K_R$ shows that
+  memory acts here as a **complexity-liberator on the action side**, not
+  as a smoothing filter. The agent leaves passive stabilisation and
+  enters active local-gradient navigation.
+- ADR-028's Option A is vindicated: the deeper H8 pivot is *not*
+  required to explain the σ regime. The minimal coupling component in E₀
+  is **local temporal differentiation** — i.e. the agent's ability to
+  compare $O_t$ with a single previous observation. The paradox is
+  **kinetic, not geometric**.
+
+## 4. What this release is NOT
+
+- Not a claim about cognition, agency, intent, intelligence, emergence,
+  or any cousin term. Permitted vocabulary remains operational only.
+- Not a statement that one tick of memory is *necessary* — only
+  *sufficient* to break the σ inversion within the H₇-κ pre-registration.
+- Not a confirmation of any deeper architectural hypothesis. H8 is
+  not invoked, refuted, or modified by this release; it simply is no
+  longer required to interpret σ.
+- Not a derivation of M_κ from first principles. M_κ is the operational
+  minimum (1 tick, 0 parameters) chosen *before* the run; alternative
+  minima (e.g. $m_{t+1} \leftarrow \alpha O_t + (1-\alpha) m_t$ with
+  $\alpha = 1$ as a special case) are not tested here.
+- Not preliminary. Per ADR-030 (now ACCEPTED), the H₇-κ pre-registration
+  is spent on pool [1500-1529]. No further runs of the κ pipeline under
+  the present probe are authorised on this pool.
+
+## 5. Reproducibility note
+
+The H₅ Docker image (`cae-research-kit:0.1.0`, fingerprint
+`406ce26e…008e7e5f`) is unchanged. The H₇ development environment is
+unchanged from v0.3.0 (Python 3.12.3, `numpy==1.26.4`, `scipy==1.12.0`,
+`pytest==8.1.1`). The σ chain SHAs (`sigma_runner.py = 1ae4a877…`,
+`sigma_adjudicator.py = f6c5aeff…`, `kl.py = 5b4520d6…`) were
+re-confirmed bit-identical *after* the κ run, validating the
+no-cross-contamination posture between σ and κ pipelines.
+
+The 30-row per-seed CSV (29 columns including all four policies' KL
+terms in both Miller-Madow corrected and naive variants, plus per-policy
+non-empty bin counts and clip-event counters) is sufficient to reproduce
+the verdict computation independently of the runner pipeline. The
+public Memory1Agent (`src/agents/memory1_agent.py`) plus its 5 ADT
+(`tests/adt/test_memory1_agent.py`, all passing in 0.24 s) is sufficient
+to verify the agent semantics independently. The adjudicator's I/O
+contract is documented inline in ADR-030 §3 and the verdict-table
+mapping in `research/h7_kappa_verdict.json` field
+`verdict_label_mapping`.
+
+## 6. Next steps
+
+This release closes the H₇ doctrinal arc. Three follow-on questions are
+**not** triggered by this release alone and require their own ADRs:
+
+- **κ-stability sweep.** Whether the same effect size holds for variants
+  of M_κ with longer memory windows or alternative update rules (e.g.
+  EMA, leaky integrator, multi-tick lookback). Not pre-registered;
+  pool not reserved.
+- **H8 deferral confirmation.** Whether the H8 architectural pivot
+  remains permanently unnecessary, or only unnecessary *for explaining
+  σ*. ADR-028's Option A vindication does not pre-empt H8 on its own
+  merits; a separate ADR is required.
+- **Cross-environment portability.** Whether the κ-reverses signature
+  replicates on environments other than E₀. Out of scope of the present
+  protocol; would require a new pre-registration and a new fingerprint.
+
+The κ pool tail [1530-1599] remains reserved and **frozen** pending any
+of the above ADRs. No further H₇ runs are authorised until then.
+
+---
+
 # Release v0.3.0-h7-σ-inverted
 
 **Title:** *H₇-σ Inverted: Real Feedback Loop Closer to Markov-Null than Obs-Shuffled Control*
