@@ -28,7 +28,7 @@ def test_obs_shuffle_seed_deterministic() -> None:
     # And the value is exactly the BLAKE2b digest interpreted as expected.
     expected = int.from_bytes(
         hashlib.blake2b(b"obs_shuffle::1500", digest_size=8).digest(),
-        byteorder="little",
+        byteorder="big",
     )
     assert s1 == expected
 

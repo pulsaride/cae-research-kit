@@ -28,16 +28,16 @@ from src.agents.base import Agent
 
 
 def _obs_shuffle_seed(env_seed: int) -> int:
-    """BLAKE2b('obs_shuffle::s') first 8 bytes → uint64 LE.
+    """BLAKE2b('obs_shuffle::s') first 8 bytes → uint64 BE.
 
-    Spec ADR-027 §7. Stable across Python interpreter invocations,
-    independent of PYTHONHASHSEED.
+    Spec ADR-027 §7 (forensic alignment v0.4.0 runner privé : byteorder=big).
+    Stable across Python interpreter invocations, independent of PYTHONHASHSEED.
     """
     digest = hashlib.blake2b(
         f"obs_shuffle::{env_seed}".encode("ascii"),
         digest_size=8,
     ).digest()
-    return int.from_bytes(digest, byteorder="little", signed=False)
+    return int.from_bytes(digest, byteorder="big", signed=False)
 
 
 class ObsShuffledAgent(Agent):
