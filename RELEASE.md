@@ -5,7 +5,7 @@
 **Scientific status:** `KAPPA_REVERSES` — the H7-σ inverted-coupling signature is fully reversed by adding a single tick of local-pressure memory. Both branches of the pre-registered double reporting (Miller-Madow corrected primary, plug-in transparency) agree at the same p-value.
 **Operational status:** paradox-resolution published with full data, ADR chain, public agent + ADT, per-seed CSV, verdict file, and SHA-pinned freeze manifest (κ v1).
 **Predecessor:** [v0.3.0-h7-σ-inverted](#release-v030-h7-σ-inverted) (σ-inversion is the regime κ now decomposes).
-**DOI (v0.4.0):** TBD — to be pinned post-Zenodo mint. Concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
+**DOI (v0.4.0):** [10.5281/zenodo.20097880](https://doi.org/10.5281/zenodo.20097880) — concept: [10.5281/zenodo.20091626](https://doi.org/10.5281/zenodo.20091626).
 
 ---
 

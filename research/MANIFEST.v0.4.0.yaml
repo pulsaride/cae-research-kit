@@ -12,7 +12,7 @@ release:
   scientific_status: KAPPA_REVERSES
   operational_status: paradox_resolution_published_with_full_data
   predecessor: v0.3.0-h7-σ-inverted
-  doi: TBD                       # to be pinned post-Zenodo mint
+  doi: 10.5281/zenodo.20097880
   doi_concept: 10.5281/zenodo.20091626
   one_line_claim: |
     A single tick of memory on the previous local-pressure observation suffices
