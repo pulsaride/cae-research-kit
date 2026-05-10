@@ -1,0 +1,28 @@
+{
+  "branch_corrected": {
+    "branch": "corrected",
+    "cohen_d": 3.090641237972993,
+    "n_dropped": 0,
+    "n_positive": 30,
+    "n_post_drop": 30,
+    "n_seeds": 30,
+    "p_greater": 9.313225746154785e-10,
+    "sub_label": "KAPPA_TRANSFERS"
+  },
+  "branch_naive": {
+    "branch": "naive",
+    "cohen_d": 3.090653026205383,
+    "n_dropped": 0,
+    "n_positive": 30,
+    "n_post_drop": 30,
+    "n_seeds": 30,
+    "p_greater": 9.313225746154785e-10,
+    "sub_label": "KAPPA_TRANSFERS"
+  },
+  "clip_events_total": 0,
+  "csv_path": "research/h7_kappa_portability.csv",
+  "inconclusive_reasons": [],
+  "label": "KAPPA_TRANSFERS",
+  "n_rows": 30,
+  "nominal_label": "KAPPA_TRANSFERS"
+}
