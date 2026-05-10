@@ -1,0 +1,161 @@
+# MANIFEST v0.7.0-cert-protocol
+#
+# Authority chain: ADR-026 v2.1 → ADR-027 → ADR-030 → ADR-031 / ADR-031.bis
+# → ADR-032 → ADR-033 → ADR-034 → ADR-035 → ADR-036 (CAE-Cert v0.1
+# protocol, ACCEPTED 2026-05-10) → this release.
+#
+# v0.7.0 introduces NO new scientific claim. It introduces the signed
+# certification protocol CAE-Cert v0.1 (ADR-036) and ships:
+#   1. The protocol toolchain in src/cert/.
+#   2. A rétrofit certificate for v0.6.0 in research/cae-cert-v0.6.0.v01.json
+#      defending the operational reading KAPPA_BAND_LIMITED_UPPER_OPEN
+#      published in parallel of the formal verdict KAPPA_INCONCLUSIVE.
+#   3. The Ed25519 issuer public key in keys/cae-cert-issuer.pub.
+#   4. A Docker image bump cae-research-kit:0.6.0 → :0.7.0 with the new
+#      runtime deps (cryptography, jcs).
+#
+# Sibling manifests: MANIFEST.v0.1.0.yaml … MANIFEST.v0.6.0.yaml. The
+# scientific results inherited from v0.6.0 are unchanged byte-for-byte.
+
+release:
+  tag: v0.7.0-cert-protocol
+  date: 2026-05-10
+  doi:         null   # to be minted by CEO at publication
+  doi_concept: 10.5281/zenodo.20091625
+  scientific_status: KAPPA_INCONCLUSIVE        # inherited from v0.6.0
+  operational_status: kappa_signature_robust_on_validated_envelope
+  operational_envelope: "D ∈ [0.005, 0.320] (six octaves around D=0.080)"
+  rupture_boundary:    "D ≈ 0.640 (E₁ thermodynamic saturation)"
+  predecessor: v0.6.0-h7-κ-boundary
+  one_line_claim: |
+    No new scientific claim. Introduces the CAE-Cert v0.1 signed
+    certification protocol (ADR-036), the toolchain implementation,
+    and a rétrofit certificate for v0.6.0 that publicly defends the
+    parallel operational reading KAPPA_BAND_LIMITED_UPPER_OPEN with
+    Ed25519 signature, RFC 8785 (JCS) canonicalisation, and re-
+    verifiable SHA-256 audit trail across all referenced artefacts.
+
+reproduction_image:
+  inherits_from: v0.1.0-h5-rejected
+  name: cae-research-kit:0.7.0
+  base: python:3.11.9-slim-bookworm
+  delta_vs_v0_6_0: |
+    Adds runtime dependencies: cryptography>=42,<43 and jcs==0.2.1.
+    No change to numpy/scipy/pytest pins. The image_id and the
+    deterministic_fingerprint will be set at build time and pinned in a
+    follow-up commit.
+  image_id: null
+  deterministic_fingerprint: null
+
+h7_dev_environment:
+  python: 3.12.3
+  pinned:
+    numpy: 1.26.4
+    scipy: 1.12.0
+    pytest: 8.1.1
+    cryptography: 42.0.8
+    jcs: 0.2.1
+  note: |
+    v0.7.0 reuses the v0.6.0 simulation runner unchanged. The new code
+    lives strictly under src/cert/ and tests/cert/ and does not alter
+    any byte of src/env/, src/agents/, src/metrics/, src/analysis/,
+    src/experiments/.
+
+# ----------------------------------------------------------------------
+# CERTIFICATION (ADR-036 §7.2 — new section in v0.7.0+ manifests)
+# ----------------------------------------------------------------------
+certification:
+  protocol_version: 0.1.0
+  protocol_adr:
+    path: docs/adr/ADR-036-cae-cert-v01-protocol.md
+    sha256: ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636
+  issuer:
+    name: "CAE Project (self-issued, v0.1 governance)"
+    public_key_path: keys/cae-cert-issuer.pub
+    public_key_sha256: 020298af117fb8ef29ff57b800104a819e90c107f83c1d185bfe9b74e9fc2f30
+    public_key_fingerprint_sha256: 6c153dc3dddb9738347c587e107399e3ed714f715f0e7716761436b748dcbb65
+    fingerprint_algorithm: SHA-256 of DER SubjectPublicKeyInfo
+    signature_algorithm: Ed25519 (RFC 8032)
+    canonicalisation: JCS (RFC 8785)
+  certificates_issued:
+    - subject_release_tag: v0.6.0-h7-κ-boundary
+      cert_file: research/cae-cert-v0.6.0.v01.json
+      cert_file_sha256: d814d1a4fb10dfa2d0dc6de52c5007e2d4e5e6087c6315487c2594762e51ca24
+      sig_file: research/cae-cert-v0.6.0.v01.json.sig
+      sig_file_sha256: 88e770362e8ab71920cd3c306dda95f00020cc9494427addba9dc173afb15b20
+      issuance_script: scripts/issue_v060_cert.py
+      verification_command: |
+        python -m src.cert.verify \
+          --cert research/cae-cert-v0.6.0.v01.json \
+          --sig  research/cae-cert-v0.6.0.v01.json.sig \
+          --public-key keys/cae-cert-issuer.pub \
+          --repo-root .
+      formal_verdict_in_cert: KAPPA_INCONCLUSIVE
+      operational_verdict_in_cert: KAPPA_BAND_LIMITED_UPPER_OPEN
+      defense_chain_size: 2
+
+# ----------------------------------------------------------------------
+# Inherited scientific content (frozen byte-for-byte from v0.6.0)
+# ----------------------------------------------------------------------
+inherits_scientific_results_from:
+  manifest: research/MANIFEST.v0.6.0.yaml
+  manifest_sha256: 7de361f30542ce417f8ada9755f6abd62726d3da5abcafd076d4397c841777e6
+  note: |
+    All experiments, primary results, audit gate, replication, ADRs
+    21-35, and source artefact SHA-256 listings of v0.6.0 apply
+    unchanged to v0.7.0. The rétrofit certificate above re-encodes
+    those values into the signed JSON envelope; any mismatch between
+    the certificate and the v0.6.0 manifest must be treated as a
+    verification failure.
+
+# ----------------------------------------------------------------------
+# New source artefacts in v0.7.0 (the protocol implementation itself)
+# ----------------------------------------------------------------------
+public_source_artefacts_v0_7_0_only:
+  src/cert/__init__.py:        # CERT_VERSION = 0.1.0
+  src/cert/schema.py:          # ADR-036 §3 strict validator
+  src/cert/keygen.py:          # ADR-036 §4.1 Ed25519 keypair generator
+  src/cert/sigfile.py:         # ADR-036 §3.4 binary .sig format
+  src/cert/issue.py:           # ADR-036 §4.2 issuance pipeline
+  src/cert/verify.py:          # ADR-036 §4.3 verification pipeline
+  scripts/issue_v060_cert.py:  # Phase 4 rétrofit caller
+  tests/cert/test_issue_verify.py:  # ADR-036 §8 conformance tests (8 PASS)
+
+# ----------------------------------------------------------------------
+# Frozen ADR SHAs (cumulative)
+# ----------------------------------------------------------------------
+frozen_adr_sha256:
+  ADR-026:                      7e8e4ea839ad826003014d731e9baeeab04b9f33008079a46b07178884abc9ae
+  ADR-026-v2.1-amendment:       2bdf8ae9eed3684a1cfcf05a884d664fa66aea868ad8528b43db61f1fc4e35c8
+  ADR-027:                      7d755b94e58e9ac52fe2c12867d7ee6d71906c3d3b8e3608a857d282294d76fb
+  ADR-028:                      002b597131667a88771bbc3cfd3d34f1640f18300c173bb4f3055ac66d8c69ee
+  ADR-029:                      db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc
+  ADR-030:                      bc552e461c58be1021e7f5c674790befaec1c142fdbe2e71dc944f652baed27f
+  ADR-031:                      fb1a52ea74ce8a03b8f51996ce370dddc58d764a7b3991be751d3bf57648e841
+  ADR-031.bis:                  f462853157fb44ee22206b334c65726d55cb5c9f2b45da7c3f2bbb3fc920f3f9
+  ADR-032:                      4e87aa4e7ef82bd06f433f8a160d7f1924c2292a65cfe0be6ccd547567f4e749
+  ADR-033:                      938aa79205917a2bf3719f8fb42cae20efc2ceb95317ac64cab52fd6994d3f2f
+  ADR-034:                      fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2
+  ADR-035:                      84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3
+  ADR-036:                      ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636
+
+# ----------------------------------------------------------------------
+# Audit trail (cumulative pool ledger, extended)
+# ----------------------------------------------------------------------
+audit_trail:
+  doctrine: |
+    H₅ (v0.1.0) — null regime confirmed.
+    H₆ (v0.2.0) — apparent topological signature falsified.
+    H₇-σ (v0.3.0) — directional inversion published honestly.
+    H₇-κ (v0.4.0) — paradox resolved on E₀ (Cohen d = +2.66).
+    H₇-κ portability (v0.5.0) — κ transfers to E₁ at D=0.080 (Cohen d = +3.09).
+    H₇-κ boundary (v0.6.0) — formal KAPPA_INCONCLUSIVE per ADR-034 §5.4;
+      operational envelope D ∈ [0.005, 0.320]; defended by ADR-035 PASS.
+    CAE-Cert v0.1 (v0.7.0) — signed certification protocol introduced
+      (ADR-036 ACCEPTED 2026-05-10). No new scientific claim. v0.6.0
+      claims re-encoded into a signed verifiable JSON envelope; the
+      operational/formal split (KAPPA_BAND_LIMITED_UPPER_OPEN /
+      KAPPA_INCONCLUSIVE) is now machine-checkable rather than only
+      narrated in prose. Closes ADR-036 "Étape 9" (issuance) on the
+      v0.6.0 release. Étape 10 (publication) reserved as an explicit
+      CEO act outside any automated pipeline.

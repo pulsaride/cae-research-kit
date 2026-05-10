@@ -33,7 +33,10 @@ RUN pip install --upgrade "pip==24.0" "setuptools==69.5.1" "wheel==0.43.0" \
         "POT==0.9.3" \
         "pandas==2.2.1" \
         "matplotlib==3.8.3" \
-        "pytest==8.1.1"
+        "pytest==8.1.1" \
+        "cryptography>=42,<43" \
+        "jcs==0.2.1" \
+        "PyYAML>=6,<7"
 
 # --- Application code ---------------------------------------------------------
 COPY . .

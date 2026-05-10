@@ -1,0 +1,163 @@
+{
+  "audit_artefacts": [
+    {
+      "path": "research/h7_kappa_boundary_sweep.csv",
+      "role": "primary_sweep_csv",
+      "sha256": "997b8e8573e355d803b04e9efa5f036ffa8f68c459caa32437e107ee15cfc677"
+    },
+    {
+      "path": "research/h7_kappa_boundary_verdict.json",
+      "role": "verdict_json",
+      "sha256": "95512b366116b202dfad65a8a6d6b83513fa4ae09e02840831650c35dd6290c0"
+    },
+    {
+      "path": "research/h7_kappa_audit_HEAD_pre_v060.csv",
+      "role": "audit_gate_csv",
+      "sha256": "4a6815c2b12fcf6aeda241a2130bff0175a2e2efc8c76bcda95710261bd231b0"
+    },
+    {
+      "path": "research/h7_kappa_audit_HEAD_pre_v060.report.txt",
+      "role": "audit_gate_report",
+      "sha256": "386d993e653b16bdf690efaa4bd32a9d57662a25049479474907e08844fed65a"
+    },
+    {
+      "path": "research/h7_kappa_replication_v060.csv",
+      "role": "adr035_replication_csv",
+      "sha256": "b532d938b443ab75c5cef2c3063f4c7a827cf99a5fa31860a3b9ee83c02829ee"
+    },
+    {
+      "path": "research/h7_kappa_replication_v060.report.txt",
+      "role": "adr035_replication_report",
+      "sha256": "bf5e8a4619c5e84959fd60f595eed465c36e6e452f3f40fb29269db4e94f64e7"
+    },
+    {
+      "path": "research/h7_kappa_portability.csv",
+      "role": "v050_reference_csv",
+      "sha256": "b532d938b443ab75c5cef2c3063f4c7a827cf99a5fa31860a3b9ee83c02829ee"
+    }
+  ],
+  "cert_id": "a05c8f05-9604-4360-b3eb-92436956184d",
+  "cert_version": "0.1.0",
+  "claims": {
+    "formal_verdict": "KAPPA_INCONCLUSIVE",
+    "operational_envelope": {
+      "max": 0.32,
+      "min": 0.005,
+      "parameter": "D",
+      "rupture_above": 0.64,
+      "rupture_below": null
+    },
+    "operational_verdict": "KAPPA_BAND_LIMITED_UPPER_OPEN",
+    "primary_metrics": {
+      "clip_total": 0,
+      "cohen_d_median": 3.090641237972993,
+      "cohen_d_range": [
+        2.763514822944643,
+        3.013621930330641
+      ],
+      "n_pos": 30,
+      "n_seeds": 30,
+      "p_value": 1.862645149230957e-09
+    }
+  },
+  "defense_chain": [
+    {
+      "adr_id": "ADR-035",
+      "claim": "HEAD CSV byte-identical to v0.5.0 ref on pool [2000-2029] @ D=0.080 (max|Δ|=0.0); the 3.85% inter-pool concordance gap triggering ADR-034 §5.4 is sampling noise (~0.46σ, disjoint n=30), not engine drift; defends envelope D∈[0.005,0.320]",
+      "max_abs_delta": 0.0
+    },
+    {
+      "adr_id": "ADR-033",
+      "claim": "HEAD audit gate on E₀ pool [1500-1529] reproduces audit-passed-v1 reference under atol=1e-9 rtol=0; max|Δ_float|=4.5e-11; no drift in src/env, src/agents, src/metrics, src/analysis/sigma_chain.py",
+      "max_abs_delta": 4.5e-11
+    }
+  ],
+  "evidence_chain": [
+    {
+      "adr_id": "ADR-030",
+      "path": "docs/adr/ADR-030-h7-kappa-pre-registration.md",
+      "sha256": "bc552e461c58be1021e7f5c674790befaec1c142fdbe2e71dc944f652baed27f"
+    },
+    {
+      "adr_id": "ADR-032",
+      "path": "docs/adr/ADR-032-h7-kappa-portability-e1.md",
+      "sha256": "4e87aa4e7ef82bd06f433f8a160d7f1924c2292a65cfe0be6ccd547567f4e749"
+    },
+    {
+      "adr_id": "ADR-033",
+      "path": "docs/adr/ADR-033-audit-gate-public-runner.md",
+      "sha256": "938aa79205917a2bf3719f8fb42cae20efc2ceb95317ac64cab52fd6994d3f2f"
+    },
+    {
+      "adr_id": "ADR-034",
+      "path": "docs/adr/ADR-034-h7-kappa-boundary-of-validity-diffusion-sweep.md",
+      "sha256": "fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2"
+    },
+    {
+      "adr_id": "ADR-035",
+      "path": "docs/adr/ADR-035-h7-kappa-replication-v050-seed-paired.md",
+      "sha256": "84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3"
+    },
+    {
+      "adr_id": "ADR-036",
+      "path": "docs/adr/ADR-036-cae-cert-v01-protocol.md",
+      "sha256": "ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636"
+    }
+  ],
+  "expiry": null,
+  "issued_at": "2026-05-10T18:00:00Z",
+  "issuer": {
+    "name": "CAE Project (self-issued, v0.1 governance)",
+    "public_key_fingerprint_sha256": "6c153dc3dddb9738347c587e107399e3ed714f715f0e7716761436b748dcbb65"
+  },
+  "notes": "Rétrofit certificate for the published v0.6.0 release. Operational verdict KAPPA_BAND_LIMITED_UPPER_OPEN is defended by ADR-035 byte-identity on pool [2000-2029] @ D=0.080. Formal verdict KAPPA_INCONCLUSIVE remains the published scientific status per ADR-034 §5.4 (concordance v0.5.0 = 3.85% > 1% override).",
+  "protocol_clauses": [
+    {
+      "id": "ADR-034 §3.4 alpha=0.005",
+      "note": "all 6 envelope grid-points p < 1.86e-9",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §3.4 cohen_d_min=0.5",
+      "note": "envelope min d = 2.764 > 0.5",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §3.4 n_positive_min=25",
+      "note": "envelope min n_pos = 29/30 > 25",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §3.4 clip_events_max=0",
+      "note": "0 clip events across full sweep (210 runs)",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §3.4 both_branches_must_agree",
+      "note": "intra-sample corr/naive max disagreement = 4.1e-06",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §3.4 D_080_must_pass",
+      "note": "n_pos=30, d=2.972, p=9.31e-10 at D=0.080",
+      "status": "PASS"
+    },
+    {
+      "id": "ADR-034 §5.4 concordance_v050 ≤ 1%",
+      "note": "observed concordance = 3.85% > 1% threshold; this single criterion override forces formal scientific_status = KAPPA_INCONCLUSIVE per pre-registration verbatim",
+      "status": "FIRE"
+    },
+    {
+      "id": "ADR-035 §5.1 byte-identity path",
+      "note": "HEAD CSV byte-for-byte identical to v0.5.0 reference on pool [2000-2029] @ D=0.080; max|Δ_float|=0.0; defends operational envelope as sampling noise",
+      "status": "PASS"
+    }
+  ],
+  "revocation_url": "https://github.com/CAE-Project/CaePivot/releases/tag/cert-revocations",
+  "subject": {
+    "doi": "10.5281/zenodo.20112259",
+    "manifest_path": "research/MANIFEST.v0.6.0.yaml",
+    "manifest_sha256": "7de361f30542ce417f8ada9755f6abd62726d3da5abcafd076d4397c841777e6",
+    "release_tag": "v0.6.0-h7-κ-boundary"
+  }
+}

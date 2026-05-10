@@ -1,6 +1,6 @@
 [project]
 name = "cae-research-kit"
-version = "0.1.0"
+version = "0.7.0"
 description = "Experimental Observability Platform for Online Adaptive Optimization Pressure"
 requires-python = "==3.11.*"
 dependencies = [
@@ -9,6 +9,10 @@ dependencies = [
     "POT==0.9.3",
     "pandas==2.2.1",
     "matplotlib==3.8.3",
+    # ADR-036 §4 — CAE-Cert v0.1 protocol runtime deps.
+    "cryptography>=42,<43",
+    "jcs==0.2.1",
+    "PyYAML>=6,<7",
 ]
 
 [project.optional-dependencies]

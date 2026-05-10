@@ -1,0 +1,6 @@
+# ADR-036 §5.3 — only the public key is committed to the repo.
+# Private keys live exclusively in ~/.cae-keys/ (chmod 600).
+*
+!.gitignore
+!README.md
+!*.pub
