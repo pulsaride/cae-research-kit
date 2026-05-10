@@ -167,7 +167,7 @@ Les tests adversariaux suivants doivent passer en CI sur le nouveau script :
 - `test_diffusion_sweep_smoke_seed_2000` : reproduit le seed 2000 v0.5.0 à $D = 0.080$ sous tolérances ADR-033.
 - `test_diffusion_sweep_grid_frozen` : importation de la liste `DIFFUSION_GRID` depuis le module retourne exactement `[0.005, 0.020, 0.040, 0.080, 0.160, 0.320, 0.640]`. Aucune autre valeur acceptée.
 - `test_diffusion_sweep_pool_frozen` : la liste `SEED_POOL` retourne `list(range(4000, 4030))`. Aucune intersection avec pools antérieurs.
-- `test_diffusion_sweep_no_runner_modification` : `hashlib.sha256(open('src/experiments/portability_draw.py').read()).hexdigest()` == `3c4a7df4…716aa79d` (SHA-256 v0.5.0 figé).
+- `test_diffusion_sweep_no_runner_modification` : `hashlib.sha256(open('src/experiments/portability_draw.py').read()).hexdigest()` == `3c4a7df4c67e162174466e2488ebc8d35676558e870e02c2bbb5cfc2716aa79d` (SHA-256 v0.5.0 figé).
 - `test_diffusion_sweep_csv_header` : le CSV de sortie a pour première colonne `diffusion_coeff` puis le header `audit_compare.EXPECTED_HEADER` v0.5.0 *à l'identique*.
 - `test_diffusion_sweep_guard_flag` : `diffusion_sweep.py` refuse d'exécuter le tirage complet sans flag `--i-have-read-adr-034`. (Symétrique de la garde ADR-033 sur `portability_draw.py --pool portability`.)
 
