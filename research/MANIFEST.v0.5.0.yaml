@@ -14,8 +14,10 @@ release:
   scientific_status: KAPPA_TRANSFERS
   operational_status: kappa_signature_holds_under_diffusive_environment
   predecessor: v0.4.0-h7-κ-reverses
-  doi: TBD
-  doi_concept: TBD
+  doi: 10.5281/zenodo.20107855
+  doi_concept: 10.5281/zenodo.20091625
+  zenodo_record_url: https://zenodo.org/records/20107855
+  zenodo_deposit_date: 2026-05-10
   one_line_claim: |
     The κ signature published in v0.4.0 (one-tick memory breaks the σ inversion
     on E₀) survives an out-of-distribution change to a diffusive environment

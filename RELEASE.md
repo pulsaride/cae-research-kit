@@ -5,7 +5,7 @@
 **Scientific status:** `KAPPA_TRANSFERS` — the κ signature published in v0.4.0 (one tick of local-pressure memory breaks the σ inversion on E₀) survives an out-of-distribution change to a calibrated diffusive environment E₁ on a fresh, pre-registered seed pool [2000-2029]. Both branches of the pre-registered double reporting (Miller-Madow corrected primary, plug-in transparency) agree at the same p-value with `verdicts_agree = true`.
 **Operational status:** the κ pipeline is now end-to-end publicly executable. The runner is a public reimplementation gated by a bit-level audit against the v0.4.0 reference seeds [1500-1529] under fixed tolerances (atol = 1e-9, rtol = 0, `==` strict on integer columns). ADR-033 ACCEPTED on 2026-05-09; tag `audit-passed-v1` placed before the portability tirage.
 **Predecessor:** [v0.4.0-h7-κ-reverses](#release-v040-h7-κ-reverses) (κ on E₀; v0.5.0 tests whether the same signature transfers to a calibrated E₁).
-**DOI (v0.5.0):** TBD — to be filled after Zenodo deposit; concept DOI inherited from v0.1.0 lineage.
+**DOI (v0.5.0):** [10.5281/zenodo.20107855](https://doi.org/10.5281/zenodo.20107855) — concept: [10.5281/zenodo.20091625](https://doi.org/10.5281/zenodo.20091625).
 
 ---
 
