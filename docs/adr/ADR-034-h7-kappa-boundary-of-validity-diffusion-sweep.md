@@ -1,7 +1,8 @@
 # ADR-034 — H₇-κ Boundary of Validity (diffusion sweep on E₁)
 
-**Statut** : PROPOSED
+**Statut** : ACCEPTED
 **Date d'ouverture** : 2026-05-10
+**Date d'acceptation** : 2026-05-10
 **Décideur** : CEO (verrous épistémiques V1-V2-V3 ADR-032 §7.1 ; aucun reviewer requis avant ACCEPTED)
 **Amont** : ADR-032 §1 (déclencheur nominal), ADR-032 §6.1 (verdict v0.5.0 = `KAPPA_TRANSFERS`), ADR-033 ACCEPTED (audit gate hérité), [RELEASE.md v0.5.0 §6](../../RELEASE.md) "Portability beyond E₁" (question ouverte)
 **Aval** : ADR-035 (CAE-Cert v0.1, déclenché *si* v0.6.0 = `KAPPA_ROBUST_PORTABILITY`), ADR de remédiation seulement *si* v0.6.0 = `KAPPA_FRAGILE`
@@ -249,9 +250,9 @@ Aucune des étapes 2-9 ne peut être engagée avant que cette ADR-034 ne soit AC
 
 ## 8. Statut workflow
 
-- **PROPOSED** : 2026-05-10 (présente version).
-- **ACCEPTED** : déclenchée par décision CEO sur cette ADR. Aucun reviewer requis (V1 ADR-032 §7.1).
-- **TIRAGE AUTORISÉ** : après ACCEPTED + ADTs §4.4 PASS + audit secondaire §4.3 PASS.
+- **PROPOSED** : 2026-05-10 (commit `3a6d7fd`).
+- **ACCEPTED** : 2026-05-10 par décision CEO (V1 ADR-032 §7.1, aucun reviewer requis). Pré-registration figée : grille §3.1, pool §3.2, verdicts §5, conditions §7 ne peuvent plus être modifiés sans nouvelle ADR.
+- **TIRAGE AUTORISÉ** : après ADTs §4.4 PASS + audit secondaire §4.3 PASS sur la branche `main` HEAD.
 - **VERDICT RENDU** : par exécution déterministe de `verdict_v06.py` sur le CSV produit par `diffusion_sweep.py`. Aucune intervention humaine entre le tirage et le verdict.
 - **RELEASE v0.6.0** : conditionnée à §7.
 
