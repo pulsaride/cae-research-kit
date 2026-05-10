@@ -12,7 +12,11 @@ keywords:
   - pre-registration
   - falsification
 target: "JOSS / SoftwareX (≤ 8 pages)"
-license: "MIT (code), CC-BY-4.0 (text)"
+license: "Apache-2.0 (code), CC-BY-4.0 (text)"
+doi: "10.5281/zenodo.20112693"
+repository: "https://github.com/pulsaride/cae-research-kit"
+archive_doi: "https://doi.org/10.5281/zenodo.20112693"
+bibliography: paper.bib
 ---
 
 ## Summary
@@ -167,11 +171,10 @@ ADR-035 forced into the `v0.6.0` release.
 
 ## References
 
-- ADR-030 — H7-κ pre-registration. CAE Project, 2026.
-- ADR-032 — H7-κ portability to environment E₁. CAE Project, 2026.
-- ADR-033 — Audit gate doctrine and public runner. CAE Project, 2026.
-- ADR-034 — H7-κ boundary of validity, diffusion sweep. CAE Project, 2026.
-- ADR-035 — H7-κ replication v0.5.0, seed-paired. CAE Project, 2026.
-- ADR-036 — CAE-Cert v0.1 protocol. CAE Project, 2026.
-- RFC 8032 — Edwards-curve Digital Signature Algorithm (EdDSA), 2017.
-- RFC 8785 — JSON Canonicalization Scheme (JCS), 2020.
+<!-- Pandoc reads bibliography: paper.bib (see frontmatter) and renders entries below. -->
+
+- `CAE-Cert v0.1` archived release [@cae_cert_zenodo_v070].
+- ADR-030 [@adr030], ADR-032 [@adr032], ADR-033 [@adr033], ADR-034 [@adr034], ADR-035 [@adr035], ADR-036 [@adr036].
+- Edwards-curve Digital Signature Algorithm (EdDSA) [@rfc8032].
+- JSON Canonicalization Scheme (JCS) [@rfc8785].
+- Sigstore [@sigstore]; in-toto [@intoto] (compared in Statement of need).

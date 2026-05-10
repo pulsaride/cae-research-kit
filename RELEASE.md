@@ -1,3 +1,17 @@
+# Release v0.7.0-cert-protocol
+
+**Title:** *CAE-Cert v0.1 — A Build-to-Destroy Certification Protocol*
+**Date:** 2026-05-10
+**Status:** ADR-036 ACCEPTED (2026-05-10) — published.
+**DOI (v0.7.0):** [10.5281/zenodo.20112693](https://doi.org/10.5281/zenodo.20112693).
+**Tag:** [`v0.7.0-cert-protocol`](https://github.com/pulsaride/cae-research-kit/releases/tag/v0.7.0-cert-protocol).
+**Issuer fingerprint (Ed25519, SHA-256 of DER SubjectPublicKeyInfo):** `6c153dc3dddb9738347c587e107399e3ed714f715f0e7716761436b748dcbb65`.
+**Cornerstone artefact:** `research/cae-cert-v0.6.0.v01.json` — first official certificate of the project, with `formal_verdict = KAPPA_INCONCLUSIVE` and `operational_verdict = KAPPA_BAND_LIMITED_UPPER_OPEN`, defended by a signed two-link chain (ADR-035, ADR-033). Reproducible offline verification in <30 s via `python -m src.cert.verify --repo-root .` (exits 0, reports `OVERALL: PASS`).
+**Companion paper:** [`paper/cae-cert-v01/paper.md`](paper/cae-cert-v01/paper.md) (target: JOSS / SoftwareX).
+**Authority chain:** ADR-030 → ADR-032 → ADR-033 → ADR-034 → ADR-035 → ADR-036.
+
+---
+
 # Release v0.6.0-h7-κ-boundary
 
 **Title:** *H₇-κ Boundary of Validity: A Six-Octave Robust Envelope Around D=0.080, a Sharp Rupture at D=0.640 Attributable to E₁ Saturation, and a Pre-Registered Override That Fires on Sampling Noise*
