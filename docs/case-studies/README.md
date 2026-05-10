@@ -10,7 +10,7 @@ Each entry in this directory documents a certificate issued by an external proje
 
 ## Status
 
-**Currently empty — actively seeking external adopters.**
+**Currently empty.** The repository entered an [observation phase](../../README.md) on 2026-05-10. We are not running an outreach campaign during this window; we wait for the protocol to be discovered, replicated, or contested on its own terms. The directory remains open: any external issuer is welcome to land an entry here at any time, and we will pair-program the first issuance synchronously when it happens.
 
 ## How to be listed here
 

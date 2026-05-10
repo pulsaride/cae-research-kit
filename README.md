@@ -1,5 +1,15 @@
 # CAE Research Kit
 
+> ## 🧊 Observation phase (May 2026 → August 2026)
+>
+> The protocol is **stable and frozen** at [`v0.7.0-cert-protocol`](https://github.com/pulsaride/cae-research-kit/releases/tag/v0.7.0-cert-protocol) (DOI [10.5281/zenodo.20112693](https://doi.org/10.5281/zenodo.20112693)). Active development is **paused** to let the community study, replicate, or contest the protocol on its own terms. During this window:
+>
+> - issues and pull requests will be answered, but no new ADR, schema change, or release is planned;
+> - the [`docs/case-studies/`](docs/case-studies/) directory waits for the first **external** issuer (any project other than `cae-research-kit` itself);
+> - active engineering effort has shifted to the operational downstream consumer that exercises the science of CAE under production constraints. That consumer is developed in a separate repository on its own cadence and is **not** governed by this repository's protocol.
+>
+> The protocol resumes active development when at least one of the following is true: (a) a first independent case study lands in `docs/case-studies/`; (b) a third party publishes a critique or a replication; (c) the downstream consumer reaches production deployment and surfaces a concrete protocol gap.
+
 A frozen, deterministic, falsification-driven measurement instrument.
 Five published hypotheses: **H₅** (rejected, v0.1.0), **H₆** (rejected by
 control, v0.2.0), **H₇-σ** (inverted directional signal, v0.3.0),
