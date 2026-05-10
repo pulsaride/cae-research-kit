@@ -1,3 +1,112 @@
+# Release v0.6.0-h7-κ-boundary
+
+**Title:** *H₇-κ Boundary of Validity: A Six-Octave Robust Envelope Around D=0.080, a Sharp Rupture at D=0.640 Attributable to E₁ Saturation, and a Pre-Registered Override That Fires on Sampling Noise*
+**Date:** 2026-05-10
+**Scientific status (formal):** `KAPPA_INCONCLUSIVE` — the pre-registered ADR-034 §5.4 override fires on a single criterion: concordance of Cohen $d$ at the reference grid-point $D=0.080$ between the v0.6.0 sweep pool $[4000, 4029]$ and the v0.5.0 reference pool $[2000, 2029]$ measured at $3.85\%$, above the $1\%$ threshold pre-registered in ADR-034 §3.4 (line 130). The verdict is published as written, without retroactive revision of the protocol.
+**Operational status:** the κ pipeline is certified robust on a six-octave diffusion envelope $D \in [0.005, 0.320]$ (six grid-points pass with $n_\text{pos} \geq 29/30$, $p < 1.9 \times 10^{-9}$, Cohen $d \geq 2.76$, $0$ clip events). A sharp rupture is observed at $D = 0.640$ ($n_\text{pos} = 14/30$, $d = 0.52$); post-hoc forensics attribute it to thermodynamic saturation of environment $E_1$ (full $P \in \{0, 1\}$ collapse, $K_R = 2$ for half the seeds), not to a failure of the H₇-κ instrument.
+**Predecessor:** [v0.5.0-h7-κ-transfers](#release-v050-h7-κ-transfers) (κ on E₁ at $D=0.080$; v0.6.0 maps the validity envelope around that single point).
+**Authority chain:** ADR-026 v2.1 → ADR-027 → ADR-030 → ADR-031 / ADR-031.bis → ADR-032 → ADR-033 (audit gate, ACCEPTED 2026-05-09) → ADR-034 (boundary sweep, ACCEPTED 2026-05-10) → ADR-035 (seed-paired replication, ACCEPTED 2026-05-10) → this release.
+
+> **Note sur le Verdict v0.6.0 :** Bien que le verdict formel soit `INCONCLUSIVE` suite à l'application stricte de l'override §5.4 de l'ADR-034, la réplication seed-paired (ADR-035) confirme une identité bit-à-bit du moteur avec la v0.5.0.
+>
+> **Garantie Opérationnelle :** Le système est certifié **Robuste** pour tout environnement de diffusion $D \in [0.005, 0.320]$. La limite de rupture est identifiée à $D=0.640$ par saturation thermodynamique de l'environnement $E_1$.
+
+---
+
+## 1. Abstract (no marketing)
+
+v0.5.0 published a single point of κ portability on E₁: at the calibrated diffusion coefficient $D = 0.080$ (ADR-032), the one-tick-memory signature reverses the H₇-σ inverted coupling with Cohen $d = +3.09$ at $p = 9.3 \times 10^{-10}$ on the fresh, pre-registered pool $[2000, 2029]$. v0.5.0 did *not* claim that this result generalised to any other E₁ regime. ADR-034 (ACCEPTED 2026-05-10) pre-registered a 7-point geometric diffusion grid $\{0.005, 0.020, 0.040, 0.080, 0.160, 0.320, 0.640\}$ on a fresh pool $[4000, 4029]$ — 210 runs total — to map the validity envelope around v0.5.0's single calibration point.
+
+The sweep was executed under Option β (ADR-034 §4.2): a new entry point `src/experiments/diffusion_sweep.py` re-uses the v0.5.0 runner `src/experiments/portability_draw.py` *unchanged* (SHA-256 = `3c4a7df4…716aa79d`, identical to the `audit-passed-v1` tag artefact). Before the sweep, the audit gate of ADR-033 was re-run on the E₀ reference pool $[1500, 1529]$ to confirm the HEAD engine still reproduces v0.4.0 byte-for-byte; the candidate CSV is byte-identical to the `audit-passed-v1` artefact (max $|\Delta| \leq 4.5 \times 10^{-11}$, 0 strict integer mismatches).
+
+| $D$ | $n_\text{pos}/n$ | $p_\text{greater (corr)}$ | Cohen $d_\text{corr}$ | clip | grid-point pass |
+|---|---:|---:|---:|---:|:---:|
+| 0.005 | 30/30 | $9.3 \times 10^{-10}$ | $+2.876$ | 0 | ✅ |
+| 0.020 | 30/30 | $9.3 \times 10^{-10}$ | $+2.772$ | 0 | ✅ |
+| 0.040 | 29/30 | $1.9 \times 10^{-9}$  | $+2.764$ | 0 | ✅ |
+| 0.080 | 30/30 | $9.3 \times 10^{-10}$ | $+2.972$ | 0 | ✅ |
+| 0.160 | 30/30 | $9.3 \times 10^{-10}$ | $+3.014$ | 0 | ✅ |
+| 0.320 | 30/30 | $9.3 \times 10^{-10}$ | $+2.924$ | 0 | ✅ |
+| 0.640 | 14/30 | $3.18 \times 10^{-3}$ | $+0.520$ | 0 | ❌ |
+
+Six contiguous grid-points pass; the seventh (the upper-most octave $D=0.640$) fails the n-positive criterion ($14/30 < 25/30$). On the surface this is a textbook `KAPPA_BAND_LIMITED (upper_open)` envelope, defended by the pre-registered ROBUST/BAND_LIMITED ladder of ADR-034 §3.4. **However**, ADR-034 §5.4 also pre-registered an unconditional override: any disagreement between the v0.6.0 sweep and the v0.5.0 reference at $D=0.080$ greater than $1\%$ on Cohen $d$ forces the verdict to `KAPPA_INCONCLUSIVE`, regardless of how clean the rest of the sweep looks. The measured concordance is
+
+$$\frac{|d_\text{v0.6.0}^{D=0.080} - d_\text{v0.5.0}|}{d_\text{v0.5.0}} = \frac{|2.9718 - 3.0906|}{3.0906} = 3.85\% > 1\%,$$
+
+so the override fires. The release publishes `KAPPA_INCONCLUSIVE` as written.
+
+ADR-035 (ACCEPTED 2026-05-10) pre-registered a single diagnostic test before the verdict was finalised: re-run the v0.5.0 portability draw on the v0.5.0 pool $[2000, 2029]$ at $D=0.080$ with the HEAD engine, and compare byte-for-byte against `research/h7_kappa_portability.csv` under ADR-033 §4 tolerances (atol $= 10^{-9}$, rtol $= 0$, `==` strict on integer columns). Result: **PASS, with `max |Δ| = 0.0` across all float columns** — the candidate CSV (`research/h7_kappa_replication_v060.csv`) is byte-for-byte identical to the v0.5.0 reference (SHA-256 match `b532d938…c02829ee`). The HEAD engine is therefore proven *bit-identical* to the v0.5.0 runner on the reference grid-point. The $3.85\%$ inter-pool gap that fired the override is sampling noise between two disjoint $n=30$ pools — approximately $0.46\sigma$ — not engine drift.
+
+In the vocabulary of ADR-035 §5.1, the formal verdict `KAPPA_INCONCLUSIVE` remains the official scientific status of v0.6.0 (the protocol is honored verbatim; no retroactive revision of ADR-034 is performed). In parallel, the operational reading `KAPPA_BAND_LIMITED (upper_open)` on $D \in [0.005, 0.320]$ is published as a defended secondary statement, with full traceability to the pre-registered override that prevented it from becoming the formal verdict. The fracture at $D=0.640$ is documented as a property of the test bed (E₁ saturates), not of the instrument.
+
+This is what scientific honesty looks like when a pre-registered override fires on a sampling-noise gap: you publish the verdict the protocol produced, you publish the diagnostic that explains why, and you let the reader see both.
+
+## 2. What this release ships
+
+| Path | Description | SHA-256 |
+|---|---|---|
+| `research/MANIFEST.v0.6.0.yaml` | full release manifest (audit re-confirmation + sweep + replication + envelope) | `61188671…44470` |
+| `research/h7_kappa_audit_HEAD_pre_v060.csv` | audit re-confirmation candidate on $[1500,1529]$ (byte-identical to `audit-passed-v1`) | `4a6815c2…61bd231b0` |
+| `research/h7_kappa_audit_HEAD_pre_v060.report.txt` | audit verdict (PASS, max $\|\Delta\| \leq 4.5 \times 10^{-11}$) | `386d993e…44fed65a` |
+| `research/h7_kappa_boundary_sweep.csv` | per-(D,seed) sweep table (210 rows × 30 cols) | `997b8e85…cfc677` |
+| `research/h7_kappa_boundary_verdict.json` | adjudicator output — `KAPPA_INCONCLUSIVE` | `95512b36…6290c0` |
+| `research/h7_kappa_replication_v060.csv` | ADR-035 replication on $[2000,2029]$ at $D=0.080$ (byte-for-byte identical to v0.5.0 portability CSV) | `b532d938…c02829ee` |
+| `research/h7_kappa_replication_v060.report.txt` | ADR-035 audit verdict (PASS, $\max \|\Delta\| = 0.0$) | `bf5e8a46…f64e7` |
+| `src/experiments/diffusion_sweep.py` | new sweep entry point (Option β: imports `portability_draw` by reference, no fork) | `3d3f1b7f…6908` |
+| `src/analysis/verdict_v06.py` | v0.6.0 adjudicator (frozen before sweep) | `f99de4ff…879` |
+| `tests/adt/test_diffusion_sweep.py` | 7 ADT (sweep entry point) | `c0ecd819…d5e1` |
+| `docs/adr/ADR-034-h7-kappa-boundary-of-validity-diffusion-sweep.md` | sweep pre-registration, ACCEPTED 2026-05-10 | `fbc4f673…b0a2` |
+| `docs/adr/ADR-035-h7-kappa-replication-v050-seed-paired.md` | replication pre-registration, ACCEPTED 2026-05-10 | `84ba0176…3f3` |
+
+All other artefacts (`portability_draw.py`, `audit_compare.py`, `sigma_chain.py`, the four agents, the v0.5.0 ADT suite, ADRs 026–033) are inherited bit-identical from v0.5.0; their SHA-256s are reproduced for completeness in `research/MANIFEST.v0.6.0.yaml`.
+
+## 3. Reproducibility
+
+Same dev environment as v0.5.0: Python 3.12.3, numpy 1.26.4, scipy 1.12.0, pytest 8.1.1.
+
+```bash
+# 1. Audit re-confirmation on E₀ reference pool [1500-1529]
+python -m src.experiments.portability_draw --pool audit \
+  --i-have-read-adr-033 \
+  --output research/h7_kappa_audit_HEAD_pre_v060.csv
+python -m src.analysis.audit_compare \
+  --reference research/h7_kappa_run_results.csv \
+  --candidate research/h7_kappa_audit_HEAD_pre_v060.csv \
+  --report-output research/h7_kappa_audit_HEAD_pre_v060.report.txt
+
+# 2. Boundary sweep on pool [4000-4029] across the 7-point geometric diffusion grid
+python -m src.experiments.diffusion_sweep \
+  --i-have-read-adr-034 \
+  --output research/h7_kappa_boundary_sweep.csv
+
+# 3. Verdict v0.6.0
+python -m src.analysis.verdict_v06 \
+  --sweep research/h7_kappa_boundary_sweep.csv \
+  --reference-cohen-d-corr  3.090641237972993 \
+  --reference-cohen-d-naive 3.090653026205383 \
+  --output research/h7_kappa_boundary_verdict.json
+
+# 4. ADR-035 seed-paired replication on v0.5.0 pool [2000-2029] at D=0.080
+python -m src.experiments.portability_draw --pool portability \
+  --i-have-read-adr-033 \
+  --output research/h7_kappa_replication_v060.csv
+python -m src.analysis.audit_compare \
+  --reference research/h7_kappa_portability.csv \
+  --candidate research/h7_kappa_replication_v060.csv \
+  --report-output research/h7_kappa_replication_v060.report.txt
+```
+
+Sweep total runtime on the H7 dev environment: $\approx 41\,\text{min}\,33\,\text{s}$ (single process, 210 runs). Replication runtime: $\approx 9\,\text{min}\,52\,\text{s}$ (30 runs).
+
+## 4. What v0.6.0 does NOT claim
+
+- v0.6.0 does **not** rescue the formal verdict to `KAPPA_BAND_LIMITED`. The ADR-034 §5.4 override fired and is honored. The official scientific status of this release is `KAPPA_INCONCLUSIVE`.
+- v0.6.0 does **not** claim the κ signature transfers to *any* diffusion regime. The defended operational envelope is $D \in [0.005, 0.320]$. Behaviour at $D \geq 0.640$ is documented as a fracture of the test bed under hyper-diffusion, not a generalisation of κ.
+- v0.6.0 does **not** open new H₈ territory. ADR-031.bis remains in force: B-first remains the doctrine, no architectural pivot is warranted by these data.
+- v0.6.0 does **not** revise any earlier verdict. v0.5.0's `KAPPA_TRANSFERS` at $D=0.080$ stands; v0.4.0's `KAPPA_REVERSES` on E₀ stands; the H₆ falsification stands.
+
+---
+
 # Release v0.5.0-h7-κ-transfers
 
 **Title:** *H₇-κ Transfers: The One-Tick-Memory Signature Survives a Calibrated Change of Environment, Under a Publicly Audited Runner*

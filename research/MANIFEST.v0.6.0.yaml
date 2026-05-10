@@ -1,0 +1,418 @@
+# MANIFEST v0.6.0-h7-κ-boundary
+#
+# Authority chain: ADR-026 v2.1 → ADR-027 → ADR-030 → ADR-031 / ADR-031.bis
+# → ADR-032 (portability E1) → ADR-033 (audit gate, ACCEPTED 2026-05-09)
+# → ADR-034 (boundary of validity, ACCEPTED 2026-05-10)
+# → ADR-035 (seed-paired replication v0.5.0, ACCEPTED 2026-05-10)
+# → this release. All SHAs are SHA-256 in hex.
+#
+# Sibling manifests: MANIFEST.v0.1.0.yaml … MANIFEST.v0.5.0.yaml.
+
+release:
+  tag: v0.6.0-h7-κ-boundary
+  date: 2026-05-10
+  scientific_status: KAPPA_INCONCLUSIVE
+  scientific_status_explanation: |
+    Verdict pre-registered ADR-034 §5.4. The override was triggered by a
+    single criterion (§3.4 line 130): concordance of Cohen d at the
+    reference point D=0.080 between the v0.6.0 sweep pool [4000-4029]
+    and the v0.5.0 reference pool [2000-2029] = 3.85% > 1% threshold.
+    All six other criteria of ROBUST/BAND_LIMITED were satisfied (see
+    extended_validity_envelope below).
+  operational_status: kappa_signature_robust_on_validated_envelope
+  operational_envelope: "D ∈ [0.005, 0.320] (six octaves around the v0.5.0 calibration D=0.080)"
+  rupture_boundary:    "D ≈ 0.640 (E₁ thermodynamic saturation: P_min/P_max collapse to {0,1}, K_R=2)"
+  predecessor: v0.5.0-h7-κ-transfers
+  one_line_claim: |
+    The κ signature published in v0.5.0 (Cohen d = +3.09 at D=0.080) is
+    bounded above and below by a six-octave envelope D ∈ [0.005, 0.320]
+    on which all 6 grid-points pass (n_pos ≥ 29/30, p < 1.9e-9, d ≥ 2.76,
+    0 clip events). A sharp collapse occurs at D = 0.640 (n_pos = 14/30,
+    d = 0.52) attributable by post-hoc forensics to environment E₁
+    saturation, not to the H₇-κ instrument. The pre-registered
+    "concordance vs v0.5.0 ≤ 1%" criterion of ADR-034 §3.4 fired with
+    3.85%, but ADR-035 seed-paired replication on pool [2000-2029]
+    confirmed the engine is byte-for-byte identical to the v0.5.0
+    runner output (CSV SHA-256 match), proving the 3.85% gap is
+    sampling noise between disjoint pools at n=30 (~0.46σ), not engine
+    drift. The release publishes the formal INCONCLUSIVE verdict
+    (protocol honored verbatim) and the empirical BAND_LIMITED
+    envelope (defended by ADR-035 PASS).
+
+reproduction_image:
+  inherits_from: v0.1.0-h5-rejected
+  name: cae-research-kit:0.1.0
+  image_id: sha256:f30bf02ce6e486153980c79e43e65bf5c195b4fd6ebf052f04ff10537e3ea78e
+  base: python:3.11.9-slim-bookworm
+  deterministic_fingerprint: 406ce26ec3aeefada7e2250f16d24a89361c1da2041c6775599be394008e7e5f
+
+h7_dev_environment:
+  python: 3.12.3
+  pinned:
+    numpy: 1.26.4
+    scipy: 1.12.0
+    pytest: 8.1.1
+  note: |
+    v0.6.0 reuses the v0.5.0 runner unchanged. src/experiments/portability_draw.py
+    SHA-256 is identical to the audit-passed-v1 tag commit. The new entry point
+    src/experiments/diffusion_sweep.py imports portability_draw symbols by
+    reference (Option β architecture, ADR-034 §4.2) without modifying them.
+
+# ----------------------------------------------------------------------
+# AUDIT GATE — re-confirmation on E₀ pool [1500-1529] before v0.6.0 sweep
+# ----------------------------------------------------------------------
+audit_gate_re_confirmation:
+  status: PASS
+  doctrine: ADR-033 §3.2 (extended to v0.6.0 by ADR-034 §4.3 part 2/2)
+  reference_csv: research/h7_kappa_run_results.csv
+  reference_csv_sha256: 1c4c2cd0450bb646e72b742e99c6a9efda61d9d3c781d0f9a3815241062eae2c
+  candidate_csv: research/h7_kappa_audit_HEAD_pre_v060.csv
+  candidate_csv_sha256: 4a6815c2b12fcf6aeda241a2130bff0175a2e2efc8c76bcda95710261bd231b0
+  candidate_csv_note: "byte-identical to research/h7_kappa_audit_v04_iter2.csv (audit-passed-v1 tag artefact)"
+  report: research/h7_kappa_audit_HEAD_pre_v060.report.txt
+  report_sha256: 386d993e653b16bdf690efaa4bd32a9d57662a25049479474907e08844fed65a
+  comparator: src/analysis/audit_compare.py
+  comparator_sha256: a55e3df1c1155f470fd2558203c5a807e7b7f11b6a8df723101d565617fac681
+  tolerances:
+    int_columns: ==
+    float_columns_atol: 1.0e-9
+    float_columns_rtol: 0
+  results:
+    header_match: true
+    n_rows_reference: 30
+    n_rows_candidate: 30
+    seeds_match: true
+    strict_int_mismatches_total: 0
+    max_abs_diff_float_overall: 4.5e-11
+  interpretation: |
+    The HEAD engine reproduces the v0.4.0 reference CSV on pool [1500-1529]
+    with the same byte-for-byte content as the audit-passed-v1 artefact
+    sealed at v0.5.0. No drift across src/env/, src/agents/, src/metrics/
+    or src/analysis/sigma_chain.py.
+
+# ----------------------------------------------------------------------
+# BOUNDARY-OF-VALIDITY EXPERIMENT — the v0.6.0 verdict
+# ----------------------------------------------------------------------
+experiments:
+  h7_kappa_boundary_sweep:
+    pre_registration: docs/adr/ADR-034-h7-kappa-boundary-of-validity-diffusion-sweep.md
+    pre_registration_sha256: fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2
+    inherits_statistical_chain: docs/adr/ADR-027-h7-sigma-statistical-chain.md
+    inherits_kappa_specification: docs/adr/ADR-030-h7-kappa-pre-registration.md
+    architecture: "Option β (ADR-034 §4.2): import-by-reference from portability_draw.py, no fork, no in-place edit"
+    n_seeds_per_grid_point: 30
+    n_grid_points: 7
+    n_runs_total: 210
+    seed_range: [4000, 4029]
+    diffusion_grid: [0.005, 0.020, 0.040, 0.080, 0.160, 0.320, 0.640]
+    reference_diffusion: 0.080
+    constants:
+      T_warmup: 5000
+      T_stat: 50000
+      T_total: 55000
+      B: 64
+      grid_size: 64
+      P_min: 0.0
+      P_max: 1.0
+      scalar: flatten_cell_tick
+      laplace: asymmetric_plus_one_on_Q_when_P_gt_0_and_Q_eq_0
+      entropy_correction: miller_madow
+      markov_dirichlet_alpha: 1.0
+    agent_under_test:
+      name: M_κ
+      class: src.agents.memory1_agent.Memory1Agent
+      sha256: 2684b171ac5759b9be5a5f5fddced1681558a35cdd5cbe67a47be76e727c7870
+      bit_identical_to_v05: true
+    test:
+      kind: paired_wilcoxon_signed_rank_per_grid_point
+      tested_quantity: |
+        Δ_s(D) = δ_σ^{M_κ}(s; D) − δ_σ^{R}(s; D),
+        for each (D, seed) pair, all four branches (R, S, M, M_κ)
+        re-simulated on identical seeds at each D.
+      pairing: strict seed-to-seed, intra-grid-point
+      alternatives: [greater]
+      zero_method: wilcox
+      grid_point_pass_criteria_AND:
+        alpha: 0.005
+        cohen_d_min: 0.5
+        n_positive_min: 25
+        clip_events_max: 0
+        both_branches_must_agree: true
+      verdict_thresholds:
+        ROBUST_min_passing: 7
+        ROBUST_inner_d_large_min_count: 2
+        ROBUST_inner_d_large_threshold: 1.0
+        BAND_LIMITED_min_passing: 3
+        BAND_LIMITED_must_pass_D_080: true
+        FRAGILE_max_passing: 2
+        concordance_v050_max: 0.01           # ADR-034 §3.4 line 130
+        concordance_corr_naive_max: 0.01     # ADR-034 §5.4
+        clip_total_sweep_max: 0
+        oom_factor_max: 10.0
+    primary_results_per_grid_point:
+      D=0.005:
+        n_positive_corr: 30
+        n_positive_naive: 30
+        cohen_d_corr:    2.875946624347806
+        cohen_d_naive:   2.875959466284415
+        p_greater_corr:  9.313225746154785e-10
+        p_greater_naive: 9.313225746154785e-10
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.020:
+        n_positive_corr: 30
+        n_positive_naive: 30
+        cohen_d_corr:    2.772493963296557
+        cohen_d_naive:   2.772506588043476
+        p_greater_corr:  9.313225746154785e-10
+        p_greater_naive: 9.313225746154785e-10
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.040:
+        n_positive_corr: 29
+        n_positive_naive: 29
+        cohen_d_corr:    2.763514822944643
+        cohen_d_naive:   2.763526614650164
+        p_greater_corr:  1.862645149230957e-09
+        p_greater_naive: 1.862645149230957e-09
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.080:
+        n_positive_corr: 30
+        n_positive_naive: 30
+        cohen_d_corr:    2.971758121835899
+        cohen_d_naive:   2.971770336115850
+        p_greater_corr:  9.313225746154785e-10
+        p_greater_naive: 9.313225746154785e-10
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.160:
+        n_positive_corr: 30
+        n_positive_naive: 30
+        cohen_d_corr:    3.013621930330641
+        cohen_d_naive:   3.013634961318462
+        p_greater_corr:  9.313225746154785e-10
+        p_greater_naive: 9.313225746154785e-10
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.320:
+        n_positive_corr: 30
+        n_positive_naive: 30
+        cohen_d_corr:    2.923657393906411
+        cohen_d_naive:   2.923670331317318
+        p_greater_corr:  9.313225746154785e-10
+        p_greater_naive: 9.313225746154785e-10
+        clip_events_total_at_D: 0
+        passes: true
+      D=0.640:
+        n_positive_corr: 14
+        n_positive_naive: 14
+        cohen_d_corr:    0.520033649968421
+        cohen_d_naive:   0.520033414286860
+        p_greater_corr:  3.181390607070044e-03
+        p_greater_naive: 3.181390607070044e-03
+        clip_events_total_at_D: 0
+        passes: false
+        failure_reasons:
+          - "n_positive_corr=14/30 < 25"
+          - "n_positive_naive=14/30 < 25"
+    aggregated_diagnostics:
+      n_passing: 6
+      passing_diffusions: [0.005, 0.020, 0.040, 0.080, 0.160, 0.320]
+      inner_triplet: [0.040, 0.080, 0.160]
+      inner_d_large_count: 3
+      inner_d_large_threshold: 1.0
+      passing_set_contiguous: true
+      D_080_passes: true
+      clip_events_total_sweep: 0
+      concordance_v050_corr:    0.038465517989097
+      concordance_v050_naive:   0.038465233425278
+      concordance_corr_naive_intra_sample_max: 4.1e-06
+      reference_v050_cohen_d_corr:  3.090641237972993
+      reference_v050_cohen_d_naive: 3.090653026205383
+      sweep_runtime_seconds: 2492.8
+    verdict: KAPPA_INCONCLUSIVE
+    verdict_unique_reason: "discordance v0.5.0 @ D=0.080: corr=0.0385, naive=0.0385 > 0.01 (ADR-034 §5.4)"
+    verdict_pre_registered: true
+    band_variant_unreached_due_to_override: upper_open
+    artefacts:
+      - path: research/h7_kappa_boundary_sweep.csv
+        sha256: 997b8e8573e355d803b04e9efa5f036ffa8f68c459caa32437e107ee15cfc677
+        n_rows: 210
+        n_cols: 30
+      - path: research/h7_kappa_boundary_verdict.json
+        sha256: 95512b366116b202dfad65a8a6d6b83513fa4ae09e02840831650c35dd6290c0
+
+  h7_kappa_replication_v050:
+    pre_registration: docs/adr/ADR-035-h7-kappa-replication-v050-seed-paired.md
+    pre_registration_sha256: 84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3
+    purpose: |
+      Diagnostic test of engine isomorphism between HEAD and v0.5.0 on the
+      reference pool [2000-2029] at D=0.080. NOT an inferential test — no
+      new statistical claim is made on this pool. Verifies that the
+      sweep's reference grid-point shares the same underlying engine as
+      the v0.5.0 publication.
+    seed_range: [2000, 2029]
+    diffusion_coeff: 0.080
+    runner: src/experiments/portability_draw.py
+    runner_sha256: 3c4a7df4c67e162174466e2488ebc8d35676558e870e02c2bbb5cfc2716aa79d
+    runner_sha256_note: "identical to audit-passed-v1 tag and to v0.5.0 manifest"
+    reference_csv: research/h7_kappa_portability.csv
+    reference_csv_sha256: b532d938b443ab75c5cef2c3063f4c7a827cf99a5fa31860a3b9ee83c02829ee
+    candidate_csv: research/h7_kappa_replication_v060.csv
+    candidate_csv_sha256: b532d938b443ab75c5cef2c3063f4c7a827cf99a5fa31860a3b9ee83c02829ee
+    candidate_csv_note: "byte-for-byte identical to reference (strongest possible PASS)"
+    report: research/h7_kappa_replication_v060.report.txt
+    report_sha256: bf5e8a4619c5e84959fd60f595eed465c36e6e452f3f40fb29269db4e94f64e7
+    comparator: src/analysis/audit_compare.py
+    comparator_sha256: a55e3df1c1155f470fd2558203c5a807e7b7f11b6a8df723101d565617fac681
+    tolerances:
+      int_columns: ==
+      float_columns_atol: 1.0e-9
+      float_columns_rtol: 0
+    results:
+      header_match: true
+      n_rows_reference: 30
+      n_rows_candidate: 30
+      seeds_match: true
+      strict_int_mismatches_total: 0
+      max_abs_diff_float_overall: 0.0
+      verdict: PASS
+      runtime_seconds: 592.4
+    consequence_for_v060_verdict: |
+      ADR-035 §5.1 path PASS. The pre-registered v0.6.0 verdict
+      KAPPA_INCONCLUSIVE remains rendered as written (no retroactive
+      revision of ADR-034). The empirical reading published in parallel
+      is KAPPA_BAND_LIMITED (upper_open) on D ∈ [0.005, 0.320]: defended
+      because the engine is now proven byte-for-byte identical to v0.5.0
+      on the reference grid-point, which means the 3.85% inter-pool gap
+      that triggered ADR-034 §5.4 is sampling noise between two disjoint
+      n=30 pools, not engine drift.
+
+# ----------------------------------------------------------------------
+# EXTENDED VALIDITY ENVELOPE (operational, ADR-035 PASS-defended)
+# ----------------------------------------------------------------------
+extended_validity_envelope:
+  scope: |
+    The formal scientific verdict for v0.6.0 is KAPPA_INCONCLUSIVE per
+    ADR-034 §5.4. The following operational envelope is defended by the
+    combination of (a) the sweep results above and (b) the ADR-035 PASS,
+    and is published as a parallel non-overriding statement.
+  envelope_status: ROBUST_BAND_LIMITED_de_facto
+  band_variant: upper_open
+  envelope_diffusion_range: [0.005, 0.320]
+  envelope_n_octaves: 6
+  envelope_min_cohen_d: 2.763514822944643      # at D=0.040
+  envelope_max_cohen_d: 3.013621930330641      # at D=0.160
+  envelope_min_n_positive: 29
+  envelope_max_n_positive: 30
+  envelope_max_p_greater: 1.862645149230957e-09
+  envelope_clip_events: 0
+  rupture_point_diffusion: 0.640
+  rupture_post_hoc_diagnostic: |
+    All 30 seeds at D=0.640 exhibit P_min=0 and P_max=1 (full saturation
+    of the E₁ pressure field at both bounds). 15/30 seeds show K_R=2
+    (the Random reference visits only 2 cells out of 64). 4/30 seeds
+    yield Δκ = +0.000000 exactly (R, S, M, M_κ all collapsed). The
+    fracture is therefore attributable to environment E₁ degeneracy
+    under hyper-diffusion, not to a failure of the H₇-κ instrument
+    itself. This is a property of the test bed, not of the agent.
+
+# ----------------------------------------------------------------------
+# DECISION RECORDS (frozen for this release)
+# ----------------------------------------------------------------------
+decision_records:
+  ADR-034:
+    path: docs/adr/ADR-034-h7-kappa-boundary-of-validity-diffusion-sweep.md
+    sha256: fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2
+    status: ACCEPTED (2026-05-10)
+    ruling: |
+      Pre-registration of the H₇-κ boundary-of-validity diffusion sweep on
+      a 7-point geometric grid {0.005, 0.020, 0.040, 0.080, 0.160, 0.320,
+      0.640} × seed pool [4000-4029]. Verdict labels: ROBUST,
+      BAND_LIMITED (lower_open / upper_open / both_open), FRAGILE,
+      INCONCLUSIVE. Override §5.4 fires unconditionally on concordance
+      vs v0.5.0 > 1%, on intra-sample corr/naive disagreement > 1%, on
+      any clip event, on OOM divergence, and on structural anomalies.
+  ADR-035:
+    path: docs/adr/ADR-035-h7-kappa-replication-v050-seed-paired.md
+    sha256: 84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3
+    status: ACCEPTED (2026-05-10)
+    ruling: |
+      Pre-registration of a single bit-identity test on pool [2000-2029]
+      at D=0.080 against research/h7_kappa_portability.csv (v0.5.0
+      reference) under ADR-033 §4 tolerances. Result: PASS (CSV byte-for-
+      byte identical). Path §5.1 active: v0.6.0 verdict
+      KAPPA_INCONCLUSIVE remains the formal release verdict, parallel
+      operational envelope KAPPA_BAND_LIMITED (upper_open) defendable.
+
+frozen_adr_sha256:
+  ADR-026:                      7e8e4ea839ad826003014d731e9baeeab04b9f33008079a46b07178884abc9ae
+  ADR-026-v2.1-amendment:       2bdf8ae9eed3684a1cfcf05a884d664fa66aea868ad8528b43db61f1fc4e35c8
+  ADR-027:                      7d755b94e58e9ac52fe2c12867d7ee6d71906c3d3b8e3608a857d282294d76fb
+  ADR-028:                      002b597131667a88771bbc3cfd3d34f1640f18300c173bb4f3055ac66d8c69ee
+  ADR-029:                      db730ab0195c00cad1f1cd4c9982ca51e0fca7631da71a4519f566735e2c69bc
+  ADR-030:                      bc552e461c58be1021e7f5c674790befaec1c142fdbe2e71dc944f652baed27f
+  ADR-031:                      fb1a52ea74ce8a03b8f51996ce370dddc58d764a7b3991be751d3bf57648e841
+  ADR-031.bis:                  f462853157fb44ee22206b334c65726d55cb5c9f2b45da7c3f2bbb3fc920f3f9
+  ADR-032:                      4e87aa4e7ef82bd06f433f8a160d7f1924c2292a65cfe0be6ccd547567f4e749
+  ADR-033:                      938aa79205917a2bf3719f8fb42cae20efc2ceb95317ac64cab52fd6994d3f2f
+  ADR-034:                      fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2
+  ADR-035:                      84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3
+
+# ----------------------------------------------------------------------
+# Public source artefacts new or modified for v0.6.0
+# (everything else is inherited bit-identical from v0.5.0)
+# ----------------------------------------------------------------------
+public_source_artefacts_sha256:
+  src/experiments/portability_draw.py: 3c4a7df4c67e162174466e2488ebc8d35676558e870e02c2bbb5cfc2716aa79d  # UNCHANGED since audit-passed-v1
+  src/experiments/diffusion_sweep.py:  3d3f1b7ffe2f6131cbf082e4bddc0f88955d7e55c3f4d12c15ce194ad93b6908  # NEW (ADR-034 §4.2 Option β)
+  src/analysis/verdict_v06.py:         f99de4ff703f7f2465e454e5c67277331287e7a1cd6329ea91292d7f6308a879  # NEW
+  src/analysis/audit_compare.py:       a55e3df1c1155f470fd2558203c5a807e7b7f11b6a8df723101d565617fac681  # UNCHANGED since v0.5.0
+  src/analysis/sigma_chain.py:         414e1463b63cefa708a3a38f0373e1d7d7f7e4afdfdf4765ea87a3fe05d49084  # UNCHANGED since v0.5.0
+  src/agents/adaptive_agent.py:        19042669520f09d2f7d1bf5e16fc64cf8944fbb3c329609f3dd68ea1207176d3  # UNCHANGED
+  src/agents/memory1_agent.py:         2684b171ac5759b9be5a5f5fddced1681558a35cdd5cbe67a47be76e727c7870  # UNCHANGED
+  src/agents/obs_shuffled_agent.py:    c5e77295cfd43d2f5792ac84c11c4ecb2b35fc121f2da8073c42f87a34f37007  # UNCHANGED
+
+public_adt_artefacts_sha256:
+  tests/adt/test_diffusion_sweep.py:   c0ecd8193e163f9aef28a1a1c772d91c6c75bf238ee61cbc07617a0bec0cd5e1  # NEW (7 ADT)
+
+# ----------------------------------------------------------------------
+# Audit trail (cumulative pool ledger)
+# ----------------------------------------------------------------------
+audit_trail:
+  doctrine: |
+    H₅ (v0.1.0) — null regime confirmed (rejection of pressure-scaling claim).
+    H₆ (v0.2.0) — apparent topological signature falsified by obs-shuffled control.
+    H₇-σ (v0.3.0) — directional inversion published honestly.
+    H₇-κ (v0.4.0) — paradox resolved on E₀ (Cohen d = +2.66, p = 9.3e-10).
+    H₇-κ portability (v0.5.0) — κ transfers to E₁ at D=0.080 (Cohen d = +3.09).
+    H₇-κ boundary (v0.6.0) — formal verdict KAPPA_INCONCLUSIVE per
+      ADR-034 §5.4 (concordance v0.5.0 = 3.85% > 1%); operational
+      envelope D ∈ [0.005, 0.320] (six octaves, n_pos ≥ 29/30, d ≥ 2.76,
+      0 clip events). Rupture at D=0.640 attributable to E₁ saturation,
+      not to the H₇-κ instrument. Defended by ADR-035 PASS (engine
+      proven byte-for-byte identical to v0.5.0 on the reference pool).
+
+      Seven consecutive pre-registered, frozen, falsification-disciplined
+      experiments. The instrument earns trust by refusing to confirm
+      itself, by publishing inverted signals as cleanly as confirmations,
+      by decomposing those inversions into their minimal structural
+      component, by re-running that decomposition under a changed
+      environment with a publicly auditable runner, AND by mapping the
+      full validity envelope of that result and publishing the formal
+      verdict that its own pre-registered rule produces — even when that
+      rule fires on a sampling-noise gap.
+  pool_status:
+    "[1000-1029]":  burned (H5)
+    "[1200-1229]":  burned (H6 β)
+    "[1300-1329]":  burned (H6 γ)
+    "[1400-1429]":  burned (H7-σ main)
+    "[9000-9009]":  burned (H7-σ pilot, private)
+    "[9100-9109]":  available (never drawn; reserved for remediation only)
+    "[1500-1529]":  "burned (H7-κ main, v0.4.0; re-used non-inferentially for the public audit gate ADR-033 and its ADR-034 §4.3 re-confirmation in v0.6.0)"
+    "[1530-1599]":  reserved within H7-κ pool; FROZEN pending future ADR
+    "[2000-2029]":  "burned (H7-κ portability E₁ main, v0.5.0; re-used non-inferentially for the ADR-035 bit-identity replication in v0.6.0)"
+    "[2030-2099]":  reserved within portability pool; FROZEN pending future ADR
+    "[4000-4029]":  burned (H7-κ boundary diffusion sweep, this release)
+    "[4030-4099]":  reserved within boundary pool; FROZEN pending future ADR

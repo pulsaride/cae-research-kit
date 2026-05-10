@@ -1,0 +1,39 @@
+ADR-033 audit gate verdict: PASS
+  header_match           : True
+  n_rows_reference       : 30
+  n_rows_candidate       : 30
+  seeds_match            : True
+  float_atol             : 1e-09
+
+Strict mismatches per integer column:
+  B                        : 0
+  K_M_nonempty             : 0
+  K_Mk_nonempty            : 0
+  K_R_nonempty             : 0
+  K_S_nonempty             : 0
+  T_stat                   : 0
+  T_warmup                 : 0
+  clip_events_M            : 0
+  clip_events_Mk           : 0
+  clip_events_R            : 0
+  clip_events_S            : 0
+  laplace_bins_Mk          : 0
+  laplace_bins_R           : 0
+  laplace_bins_S           : 0
+  seed                     : 0
+
+Max |Δ| per float column:
+  Delta_kappa_corr         : 0.000e+00
+  Delta_kappa_naive        : 0.000e+00
+  KL_Mk_M_corr             : 0.000e+00
+  KL_Mk_M_naive            : 0.000e+00
+  KL_R_M_corr              : 0.000e+00
+  KL_R_M_naive             : 0.000e+00
+  KL_S_M_corr              : 0.000e+00
+  KL_S_M_naive             : 0.000e+00
+  P_max                    : 0.000e+00
+  P_min                    : 0.000e+00
+  delta_sigma_Mk_corr      : 0.000e+00
+  delta_sigma_Mk_naive     : 0.000e+00
+  delta_sigma_R_corr       : 0.000e+00
+  delta_sigma_R_naive      : 0.000e+00
