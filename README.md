@@ -1,25 +1,29 @@
 # CAE Research Kit
 
 A frozen, deterministic, falsification-driven measurement instrument.
-Four published hypotheses: **H₅** (rejected, v0.1.0), **H₆** (rejected by
-control, v0.2.0), **H₇-σ** (inverted directional signal, v0.3.0), and
-**H₇-κ** (σ-inversion reversed by single-tick memory, v0.4.0).
+Five published hypotheses: **H₅** (rejected, v0.1.0), **H₆** (rejected by
+control, v0.2.0), **H₇-σ** (inverted directional signal, v0.3.0),
+**H₇-κ** (σ-inversion reversed by single-tick memory on E₀, v0.4.0),
+and **H₇-κ portability** (the κ signature transfers to a calibrated
+diffusive E₁ under a publicly audited runner, v0.5.0).
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![DOI concept](https://zenodo.org/badge/DOI/10.5281/zenodo.20091626.svg)](https://doi.org/10.5281/zenodo.20091626)
 [![DOI v0.2.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20094993.svg)](https://doi.org/10.5281/zenodo.20094993)
 [![DOI v0.3.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20096664.svg)](https://doi.org/10.5281/zenodo.20096664)
 [![DOI v0.4.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20097880.svg)](https://doi.org/10.5281/zenodo.20097880)
+[![DOI v0.5.0](https://zenodo.org/badge/DOI/10.5281/zenodo.20107855.svg)](https://doi.org/10.5281/zenodo.20107855)
 [![Status: H5_REJECTED](https://img.shields.io/badge/H5-REJECTED-critical)](research/h5_verdict.json)
 [![Status: H6_FEEDBACK_ONLY](https://img.shields.io/badge/H6-FEEDBACK__ONLY-critical)](research/h6_gamma_verdict.json)
 [![Status: H7_SIGMA_INVERTED](https://img.shields.io/badge/H7--%CF%83-INVERTED-orange)](research/h7_sigma_verdict.json)
 [![Status: KAPPA_REVERSES](https://img.shields.io/badge/H7--%CE%BA-REVERSES-blue)](research/h7_kappa_verdict.json)
+[![Status: KAPPA_TRANSFERS](https://img.shields.io/badge/H7--%CE%BA--portability-TRANSFERS-brightgreen)](research/h7_kappa_portability_verdict.json)
 [![ADT: 50/50](https://img.shields.io/badge/ADT--H5-50%2F50%20PASS-brightgreen)](tests/adt)
 [![Python: 3.11.9](https://img.shields.io/badge/python-3.11.9-blue)](Dockerfile)
 
 > **The discipline is the product.**
 >
-> Four consecutive published, pre-registered, frozen experiments. The
+> Five consecutive published, pre-registered, frozen experiments. The
 > instrument earns trust by refusing to confirm itself, by publishing
 > inverted directional signals as cleanly as confirmations, *and* by
 > decomposing those inversions into their minimal structural component
@@ -180,6 +184,59 @@ it is the *memoryless* regime. The minimal structural-coupling component
 identified in E₀ is **local temporal differentiation**. The paradox is
 kinetic, not geometric. ADR-028's Option A (decompose with H7-κ before
 attempting the deeper H8 pivot) is vindicated.
+
+### v0.5.0 — H₇-κ portability on E₁ (frozen, audited)
+
+**`KAPPA_TRANSFERS`** — H₇-κ portability pre-registered (ADR-032) the
+question of whether the v0.4.0 κ signature survives an out-of-distribution
+change to a calibrated diffusive environment E₁ on a fresh seed pool
+[2000-2029] never observed before the tirage. Same statistical chain as
+ADR-027 (paired Wilcoxon, mirrored alternatives, α = 0.005, Miller-Madow +
+plug-in double reporting). M_κ inherited bit-identical from ADR-030.
+
+Admissibility was gated by an **audit-against-the-private-runner**
+(ADR-033): the public reimplementation
+([src/experiments/portability_draw.py](src/experiments/portability_draw.py))
+had to reproduce the v0.4.0 per-seed CSV on the reference pool [1500-1529]
+under fixed tolerances (atol = 1e-9, rtol = 0, `==` strict on integer
+columns) **before** the portability tirage was authorised. Iter1 failed
+strictly on the obs-shuffled witness branch; the bounded investigation of
+ADR-033 §6.2 #5 (BLAKE2b convention, exhaustive S-only brute force on
+witness seed 1500) yielded a single-bit fix in
+[src/agents/obs_shuffled_agent.py](src/agents/obs_shuffled_agent.py)
+(`byteorder = "big"`). Iter2 PASS: max $|\Delta| \leq 4.5 \times 10^{-11}$
+on all 14 float columns; 0 mismatches on all 15 integer columns. Tag
+`audit-passed-v1` placed before the portability tirage.
+
+| Branch | Cohen's d | Wilcoxon p (greater) | Verdict |
+|---|---:|---:|---|
+| Primary (`Δ_κ_corr`, Miller-Madow corrected) | **+3.0906** | **9.31e-10** | `KAPPA_TRANSFERS` |
+| Transparency (`Δ_κ_naive`, plug-in entropy) | +3.0907 | 9.31e-10 | `KAPPA_TRANSFERS` |
+
+`verdicts_agree = true`, `total_clip_events = 0`, `n_post_drop = 30`,
+**30 / 30 seeds with $\Delta_s > 0$** (no counter-example). Diagnostic
+action-repertoire shift on E₁: median K_R = 35 → K_Mκ = 57, a +22-cell
+recovery of the same order as the +23 reported on E₀ in v0.4.0.
+
+Artefacts:
+[research/h7_kappa_portability_verdict.json](research/h7_kappa_portability_verdict.json) ·
+[research/h7_kappa_portability.csv](research/h7_kappa_portability.csv) ·
+[research/h7_kappa_audit_v04_iter2.report.txt](research/h7_kappa_audit_v04_iter2.report.txt)
+
+Decision records:
+[docs/adr/ADR-031-post-kappa-trilemma-b-first.md](docs/adr/ADR-031-post-kappa-trilemma-b-first.md) ·
+[docs/adr/ADR-031.bis-supersede-section-5-3.md](docs/adr/ADR-031.bis-supersede-section-5-3.md) ·
+[docs/adr/ADR-032-h7-kappa-portability-e1.md](docs/adr/ADR-032-h7-kappa-portability-e1.md) ·
+[docs/adr/ADR-033-audit-gate-public-runner.md](docs/adr/ADR-033-audit-gate-public-runner.md)
+
+**Plain reading.** The κ mechanism — local temporal differentiation — is
+not an artefact of E₀'s specific pressure dynamics: it transfers across a
+calibrated change of medium with no loss of effect size. The κ pipeline is
+now end-to-end publicly executable; the runner that produced the
+portability CSV is the same runner that reproduces the v0.4.0 reference
+CSV bit-against-bit. v0.5.0 closes the *cross-environment portability*
+question raised in v0.4.0 §6. Portability beyond the calibrated E₁ used
+here is **not** claimed.
 
 ## Reproducibility
 
