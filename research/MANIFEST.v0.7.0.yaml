@@ -68,7 +68,7 @@ certification:
   protocol_version: 0.1.0
   protocol_adr:
     path: docs/adr/ADR-036-cae-cert-v01-protocol.md
-    sha256: ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636
+    sha256: 3eea488b793a5b2c85a89e908263782dc4d989b935223bf7c218dd4375889062
   issuer:
     name: "CAE Project (self-issued, v0.1 governance)"
     public_key_path: keys/cae-cert-issuer.pub
@@ -80,9 +80,9 @@ certification:
   certificates_issued:
     - subject_release_tag: v0.6.0-h7-κ-boundary
       cert_file: research/cae-cert-v0.6.0.v01.json
-      cert_file_sha256: d814d1a4fb10dfa2d0dc6de52c5007e2d4e5e6087c6315487c2594762e51ca24
+      cert_file_sha256: 3801ff4b325aaaa48e8a5d5e406029e12417bbeb66d5695921c2113676917244
       sig_file: research/cae-cert-v0.6.0.v01.json.sig
-      sig_file_sha256: 88e770362e8ab71920cd3c306dda95f00020cc9494427addba9dc173afb15b20
+      sig_file_sha256: 0b4bce628ac5e146676b7e0108bb0dc0e20f32ac2febc577f356e63b85b4e183
       issuance_script: scripts/issue_v060_cert.py
       verification_command: |
         python -m src.cert.verify \
@@ -137,7 +137,7 @@ frozen_adr_sha256:
   ADR-033:                      938aa79205917a2bf3719f8fb42cae20efc2ceb95317ac64cab52fd6994d3f2f
   ADR-034:                      fbc4f67373d960b2bba85664df6d4976cd01770e9a6fc8d50322418ba948d6a2
   ADR-035:                      84ba0176cfbb6a7675c3e578e941eeefb575759f1750c49cf079423d3feac3f3
-  ADR-036:                      ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636
+  ADR-036:                      3eea488b793a5b2c85a89e908263782dc4d989b935223bf7c218dd4375889062
 
 # ----------------------------------------------------------------------
 # Audit trail (cumulative pool ledger, extended)

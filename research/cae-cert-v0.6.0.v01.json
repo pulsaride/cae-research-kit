@@ -36,7 +36,7 @@
       "sha256": "b532d938b443ab75c5cef2c3063f4c7a827cf99a5fa31860a3b9ee83c02829ee"
     }
   ],
-  "cert_id": "a05c8f05-9604-4360-b3eb-92436956184d",
+  "cert_id": "489c8d75-63ac-4bca-9067-41f38198587c",
   "cert_version": "0.1.0",
   "claims": {
     "formal_verdict": "KAPPA_INCONCLUSIVE",
@@ -101,7 +101,7 @@
     {
       "adr_id": "ADR-036",
       "path": "docs/adr/ADR-036-cae-cert-v01-protocol.md",
-      "sha256": "ccd012c7dca1e03fc33efcdcde7cdeccc7e41556f132caebfbff7c81cdd27636"
+      "sha256": "3eea488b793a5b2c85a89e908263782dc4d989b935223bf7c218dd4375889062"
     }
   ],
   "expiry": null,

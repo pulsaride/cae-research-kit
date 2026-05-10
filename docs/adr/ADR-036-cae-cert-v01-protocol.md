@@ -1,8 +1,8 @@
 # ADR-036 — CAE-Cert v0.1 (signed verdict certification protocol)
 
-**Statut** : PROPOSED
+**Statut** : ACCEPTED
 **Date d'ouverture** : 2026-05-10
-**Date d'acceptation** : _(en attente CEO)_
+**Date d'acceptation** : 2026-05-10 (CEO, acte verbal verbatim ; cf. §11)
 **Décideur** : CEO (verrous épistémiques V1-V2-V3 ADR-032 §7.1 préservés ; aucune nouvelle expérience scientifique, aucun nouveau pool, aucune modification du moteur)
 **Amont** :
 - ADR-020 (lexique froid, vocabulaire interdit / requis)
