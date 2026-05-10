@@ -1,3 +1,255 @@
+# Release v0.5.0-h7-κ-transfers
+
+**Title:** *H₇-κ Transfers: The One-Tick-Memory Signature Survives a Calibrated Change of Environment, Under a Publicly Audited Runner*
+**Date:** 2026-05-10
+**Scientific status:** `KAPPA_TRANSFERS` — the κ signature published in v0.4.0 (one tick of local-pressure memory breaks the σ inversion on E₀) survives an out-of-distribution change to a calibrated diffusive environment E₁ on a fresh, pre-registered seed pool [2000-2029]. Both branches of the pre-registered double reporting (Miller-Madow corrected primary, plug-in transparency) agree at the same p-value with `verdicts_agree = true`.
+**Operational status:** the κ pipeline is now end-to-end publicly executable. The runner is a public reimplementation gated by a bit-level audit against the v0.4.0 reference seeds [1500-1529] under fixed tolerances (atol = 1e-9, rtol = 0, `==` strict on integer columns). ADR-033 ACCEPTED on 2026-05-09; tag `audit-passed-v1` placed before the portability tirage.
+**Predecessor:** [v0.4.0-h7-κ-reverses](#release-v040-h7-κ-reverses) (κ on E₀; v0.5.0 tests whether the same signature transfers to a calibrated E₁).
+**DOI (v0.5.0):** TBD — to be filled after Zenodo deposit; concept DOI inherited from v0.1.0 lineage.
+
+---
+
+## 1. Abstract (no marketing)
+
+H₇-κ (v0.4.0) published a paradox resolution on E₀: a single tick of
+memory on the previous local-pressure observation (M_κ, zero parameters,
+zero learning) reversed the H₇-σ inverted-coupling signature with
+$d = +2.66$ at $p = 9.3 \times 10^{-10}$ on n = 30 seeds [1500-1529].
+The closing section of v0.4.0 explicitly listed *cross-environment
+portability* as out of scope and requiring its own pre-registration.
+
+ADR-031 (post-κ trilemma) ranked branch B (portability E₁) first among
+the three legitimate continuations. ADR-031.bis clarified the binding
+conditions. ADR-032 pre-registered H₇-κ portability on E₁ under the same
+statistical chain as ADR-027 (paired Wilcoxon, both alternatives,
+$\alpha = 0.005$, $d \geq 0.5$, Miller-Madow + plug-in double reporting),
+on a fresh seed pool [2000-2029] never used in any prior tirage, with
+M_κ inherited *bit-identical* from ADR-030.
+
+Two independent guarantees were required *before* the portability tirage
+was admissible:
+
+1. **Audit gate (ADR-033).** The public reimplementation of the κ
+   runner (`src/experiments/portability_draw.py`) had to reproduce the
+   v0.4.0 per-seed CSV `research/h7_kappa_run_results.csv` on the
+   reference pool [1500-1529] under fixed tolerances. Iter1 failed
+   strictly on the obs-shuffled witness branch S; R, M_κ and M were
+   already bit-identical. The investigation prescribed in ADR-033 §6.2
+   #5 (BLAKE2b convention) was executed by exhaustive S-only brute
+   force on witness seed 1500 (90 combinations: key format ×
+   digest_size × byteorder). A unique solution reproduced
+   `KL_S_M_corr` to $3.0 \times 10^{-11}$:
+   `key = "obs_shuffle::{seed}"`, `digest_size = 8`, `byteorder = "big"`.
+   Single-bit fix in `src/agents/obs_shuffled_agent.py` (commit
+   `c15f313`). Iter2 PASS: max $|\Delta|$ across all 14 float columns
+   $\leq 4.5 \times 10^{-11}$; 0 strict mismatches across all 15
+   integer columns. Tag `audit-passed-v1` placed.
+2. **Pool freshness.** The portability pool [2000-2029] was reserved
+   in ADR-032 and remained frozen until ADR-033 reached `ACCEPTED`. No
+   pre-tirage observation of E₁ pressure on these seeds was permitted.
+
+The portability tirage was then run on E₁ under
+`--pool portability --i-have-read-adr-033`. Result:
+
+| Metric | Corrected (primary) | Naive (transparency) |
+|---|---|---|
+| Wilcoxon $p_\text{greater}$ | $9.31 \times 10^{-10}$ | $9.31 \times 10^{-10}$ |
+| Cohen $d$ | $+3.0906$ | $+3.0907$ |
+| $n_\text{post-drop}$ | 30 / 30 | 30 / 30 |
+| seeds with $\Delta_s > 0$ | 30 / 30 | 30 / 30 |
+| total clip events | 0 | 0 |
+
+`verdicts_agree = true`. `inconclusive_reasons = []`. Verdict:
+**`KAPPA_TRANSFERS`**.
+
+The diagnostic numbers replicate the qualitative pattern of v0.4.0
+under the new medium: median $\delta_\sigma^R_\text{corr} = -0.18$
+(R remains on the σ-inverted side under E₁) versus median
+$\delta_\sigma^{M_\kappa}_\text{corr} = +0.40$ (M_κ still crosses to the
+structural side); the action-repertoire diagnostic shifts from median
+$K_R = 35$ to $K_{M_\kappa} = 57$, a +22-cell recovery — of the same
+order as the +23 reported on E₀ in v0.4.0. The κ mechanism — local
+temporal differentiation — is therefore not an artefact of E₀'s
+specific pressure dynamics: it transfers across a calibrated change of
+medium with no loss of effect size.
+
+## 2. What this release ships
+
+| Path | Description | SHA-256 |
+|---|---|---|
+| `research/MANIFEST.v0.5.0.yaml` | full release manifest (audit gate + portability) | `2232e037…ca13b6ee` |
+| `research/h7_kappa_portability.csv` | per-seed E₁ tirage (30 rows × 29 cols) | `b532d938…c02829ee` |
+| `research/h7_kappa_portability_verdict.json` | adjudicator output | `1b7f4ee0…58218dc3d8` |
+| `research/h7_kappa_audit_v04_iter2.csv` | iter2 audit candidate (30 rows × 29 cols) | `4a6815c2…61bd231b0` |
+| `research/h7_kappa_audit_v04_iter2.report.txt` | audit verdict (PASS, max $\|\Delta\| = 4.5 \times 10^{-11}$) | `386d993e…4fed65a` |
+| `src/experiments/portability_draw.py` | public κ runner (E₀ audit + E₁ portability) | `3c4a7df4…716aa79d` |
+| `src/agents/obs_shuffled_agent.py` | obs-shuffled witness (BLAKE2b byteorder=big per §11.2) | `c5e77295…34f37007` |
+| `src/agents/adaptive_agent.py` | R policy | `19042669…07176d3` |
+| `src/agents/memory1_agent.py` | M_κ (bit-identical to v0.4.0) | `2684b171…e727c7870` |
+| `src/analysis/sigma_chain.py` | KL chain, histograms, Markov fit, Wilcoxon | `414e1463…05d49084` |
+| `src/analysis/audit_compare.py` | bit-level audit comparator (CLI + dataclass) | `a55e3df1…17fac681` |
+| `src/analysis/verdict_v05.py` | v0.5.0 adjudicator (frozen before tirage) | `389528eb…34a36be` |
+| `tests/adt/test_portability_draw.py` | 12 ADT (runner) | `f25c1c07…342e8500abc59b4` |
+| `tests/adt/test_audit_compare.py` | 12 ADT (audit gate) | `a27cb107…182b6cdca2f644` |
+| `tests/adt/test_sigma_chain.py` | 21 ADT (KL / Markov / histograms) | `5a599fad…ccefa943570353b` |
+| `tests/adt/test_obs_shuffled_agent.py` | 15 ADT (witness; assertion updated to byteorder=big) | `91653b03…0c8fc50ce` |
+| `tests/adt/test_verdict_v05.py` | 13 ADT (adjudicator) | `5523cd4d…3a3189c89e5` |
+| `docs/adr/ADR-031-post-kappa-trilemma-b-first.md` | branch B selection | `fb1a52ea…57648e841` |
+| `docs/adr/ADR-031.bis-supersede-section-5-3.md` | ADR-031 §5.3 supersession | `f4628531…fc920f3f9` |
+| `docs/adr/ADR-032-h7-kappa-portability-e1.md` | portability E₁ pre-registration | `4e87aa4e…7567f4e749` |
+| `docs/adr/ADR-033-audit-gate-public-runner.md` | audit gate, ACCEPTED 2026-05-09 | `938aa792…994d3f2f` |
+
+**Now public (no longer behind the private freeze chain):** the entire
+κ pipeline. Unlike v0.4.0, v0.5.0 ships a runner that an auditor can
+execute end-to-end against the v0.4.0 CSV with a single command and
+verify the bit-level reproduction (max $|\Delta| \leq 4.5 \times 10^{-11}$
+on the worst float column, 0 mismatches on all integer columns) before
+the portability claim is even considered. The private v0.4.0 runner
+(`.forge_private/h7_dev/src/h7/kappa_runner.py`) is no longer required
+to reproduce the κ statistical claim.
+
+## 3. Where the value is
+
+This release ships three independent guarantees stacked on top of each
+other:
+
+- **Portability of the signature.** The v0.4.0 κ effect is not an
+  E₀-specific artefact. Under a calibrated diffusive E₁, on a fresh
+  pool [2000-2029] never observed before the tirage, the same paired
+  Wilcoxon test returns $p_\text{greater} = 9.3 \times 10^{-10}$ with
+  $d = +3.09$ on both reporting branches simultaneously. Thirty
+  positive seeds out of thirty. The mechanism — local temporal
+  differentiation — survives the change of medium with the effect size
+  *increasing* slightly rather than decaying.
+- **A public bit-level audit.** The runner that produced
+  `h7_kappa_portability.csv` is the same runner that, on the v0.4.0
+  reference pool, reproduces `h7_kappa_run_results.csv` to
+  $4.5 \times 10^{-11}$ on the worst float column and exactly on all
+  fifteen integer columns. The audit was a precondition for the
+  portability tirage being admissible, not a post-hoc justification.
+  Tolerances were frozen in ADR-033 §4 *before* iter1 was executed and
+  were not relaxed when iter1 failed.
+- **A reproducible failure-then-fix trail.** Iter1 failed strictly on
+  the obs-shuffled witness branch. The diagnostic was published
+  (commit `2719191`), the investigation was bounded by ADR-033 §6.2
+  with the candidate hypotheses ordered by prior probability, and the
+  fix was a single-bit byteorder change in
+  `src/agents/obs_shuffled_agent.py` (commit `c15f313`) — *not* a
+  tolerance relaxation. The v0.4.0 reference CSV was not modified at
+  any point. This is what an audit gate is for.
+
+For an operational reader interested in detection-of-anomaly use cases,
+the practical reading is narrow and intentional: the κ test is a
+*portability stress test* of a structural-coupling probe, not a
+detection product. What v0.5.0 demonstrates is that the probe's
+positive answer on E₀ does not collapse when the environment is
+replaced by a calibrated diffusive variant; the signal-to-noise on
+$\Delta_\kappa$ (Cohen $d \approx 3$) survives the swap. Whether that
+property is useful for a downstream anomaly-detection pipeline is a
+separate engineering question that is *not* answered here.
+
+## 4. What this release is NOT
+
+- Not a claim about cognition, agency, intent, intelligence, emergence,
+  thought, or any cousin term. ADR-020 §3 vocabulary remains binding;
+  permitted vocabulary remains operational only.
+- Not a claim that v0.5.0's $d = +3.09$ is *larger than* v0.4.0's
+  $d = +2.66$ in any meaningful sense. The two effect sizes were
+  measured under different environments, on different seed pools, and
+  the comparison is not pre-registered as a test.
+- Not a claim that the κ mechanism is *the only* mechanism that would
+  transfer to E₁, nor that it is the *minimal* transferring mechanism.
+  Alternative agents are not tested here. ADR-032 only pre-registered
+  M_κ.
+- Not a claim about portability to environments *other than* the
+  calibrated E₁ specified in `research/calibration_e1.json`. Generic
+  "robustness" or "out-of-distribution generalisation" beyond the
+  pre-registered E₁ is *not* claimed.
+- Not a detection product, not a security product, not a compliance
+  product. The runner is a research instrument; using it as a
+  decision-making component requires its own qualification process,
+  which is out of scope of v0.5.0.
+- Not preliminary. Per ADR-032 the portability pool [2000-2029] is now
+  spent. No further runs of the κ pipeline on E₁ under the present
+  probe are authorised on this pool.
+
+## 5. Reproducibility note
+
+The H₅ Docker image (`cae-research-kit:0.1.0`, fingerprint
+`406ce26e…008e7e5f`) is unchanged. The development environment is
+unchanged from v0.3.0 / v0.4.0 (Python 3.12.3, `numpy==1.26.4`,
+`scipy==1.12.0`, `pytest==8.1.1`). All v0.4.0 private-chain SHAs are
+copied into `research/MANIFEST.v0.5.0.yaml` for cross-reference.
+
+To reproduce the audit gate (cold):
+
+```
+python -m src.experiments.portability_draw \
+  --pool audit \
+  --output research/h7_kappa_audit_v04_iter2.csv
+
+python -m src.analysis.audit_compare \
+  --reference research/h7_kappa_run_results.csv \
+  --candidate research/h7_kappa_audit_v04_iter2.csv \
+  --report-output research/h7_kappa_audit_v04_iter2.report.txt
+# exit code 0 on PASS, 1 on FAIL.
+```
+
+To reproduce the portability verdict on E₁ (cold; only after audit
+PASS):
+
+```
+python -m src.experiments.portability_draw \
+  --pool portability --i-have-read-adr-033 \
+  --output research/h7_kappa_portability.csv
+
+python -c "from src.analysis.verdict_v05 import compute_verdict; \
+  compute_verdict('research/h7_kappa_portability.csv', \
+                  'research/h7_kappa_portability_verdict.json')"
+```
+
+Wall-clock on the H₇ development environment: ≈ 3 min 35 s (audit
+[1500-1529], E₀) + ≈ 9 min 50 s (portability [2000-2029], E₁) on a
+single CPU. The portability runner enforces a hard refusal on
+`--pool portability` without `--i-have-read-adr-033`.
+
+The 30-row per-seed CSVs (29 columns each: header verified by
+`audit_compare.EXPECTED_HEADER`) are sufficient to reproduce both
+verdict computations independently of the runner. The 73 new ADTs
+introduced between v0.4.0 and v0.5.0 (`test_sigma_chain` 21,
+`test_obs_shuffled_agent` 15, `test_portability_draw` 12,
+`test_audit_compare` 12, `test_verdict_v05` 13) all pass against the
+shipped sources.
+
+## 6. Next steps
+
+This release closes the portability question raised in v0.4.0 §6
+(bullet *Cross-environment portability*). It does not pre-empt the
+other two follow-on questions of v0.4.0 §6:
+
+- **κ-stability sweep.** Whether the same effect size holds for
+  variants of M_κ (longer windows, EMA, leaky integrator, multi-tick
+  lookback). Not pre-registered; pool not reserved.
+- **H8 deferral confirmation.** Whether the H8 architectural pivot
+  remains permanently unnecessary. ADR-028's Option A vindication —
+  now extended to E₁ by v0.5.0 — does not pre-empt H8 on its own
+  merits; a separate ADR is required.
+
+A new question opens with v0.5.0:
+
+- **Portability beyond E₁.** Whether the κ-transfers signature
+  replicates under environments other than the specific calibrated E₁
+  used here (e.g. recalibrated diffusion coefficients, alternative
+  topologies, perturbed observation maps). Out of scope; would require
+  a new pre-registration, a new pool, and a new audit gate against
+  v0.5.0.
+
+The portability pool tail [2030-2099] remains reserved and **frozen**
+pending any of the above ADRs. No further H₇ runs are authorised on it
+until then.
+
+---
+
 # Release v0.4.0-h7-κ-reverses
 
 **Title:** *H₇-κ Reverses: A Single Tick of Memory Breaks the σ Inversion*
