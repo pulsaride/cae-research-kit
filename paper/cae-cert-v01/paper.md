@@ -1,8 +1,13 @@
 ---
 title: "CAE-Cert v0.1: a signed, machine-verifiable certification protocol for falsification-disciplined scientific software releases"
 authors:
-  - name: "CAE Project"
-    affiliation: "Self-issued"
+  - name: "Lyazid Salihi"
+    orcid: "0000-0000-0000-0000"   # TODO: replace with real ORCID iD once registered at https://orcid.org/register
+    affiliation: 1
+    corresponding: true
+affiliations:
+  - name: "Pulsaride Solutions, France"
+    index: 1
 date: 2026-05-10
 keywords:
   - reproducibility
