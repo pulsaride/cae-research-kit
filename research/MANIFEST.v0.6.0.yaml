@@ -11,6 +11,8 @@
 release:
   tag: v0.6.0-h7-κ-boundary
   date: 2026-05-10
+  doi:         10.5281/zenodo.20112259
+  doi_concept: 10.5281/zenodo.20091625
   scientific_status: KAPPA_INCONCLUSIVE
   scientific_status_explanation: |
     Verdict pre-registered ADR-034 §5.4. The override was triggered by a
